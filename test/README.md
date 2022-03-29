@@ -35,7 +35,7 @@ Here has a reference. You can also install TiDB contianer using the following co
 
 ```
 docker pull pingcap/tidb:nightly
-docker run -d --name tidb -p 4000:4000 pingcap/tidb
+docker run -d --name tidb -p 4000:4000 pingcap/tidb:nightly
 mysql -u root -P 4000 -h 127.0.0.1
 ```
 
