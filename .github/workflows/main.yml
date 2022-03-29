@@ -1,0 +1,35 @@
+name: "Integration Test"
+
+on:
+  pull_request:
+  push:
+    branches: main
+
+jobs:
+  build:
+    name: Python 2.8 | TiDB nightly | Ubuntu latest
+    runs-on: ubuntu-latest
+
+    services:
+      tidb:
+        image: pingcap/tidb:nightly
+        ports:
+          - 4000:4000
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install requirements
+      run: |
+        pip install -r requirements_dev.txt
+
+    - name: Run tests
+      run: |
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb.dbtspec
+        
