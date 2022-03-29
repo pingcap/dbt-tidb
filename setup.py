@@ -4,7 +4,7 @@ import sys
 import re
 
 if sys.version_info < (3, 7) or sys.version_info >= (3, 10):
-    print('Error: dbt-mysql does not support this version of Python.')
+    print('Error: dbt-tidb does not support this version of Python.')
     print('Please install Python 3.7 or higher but less than 3.10.')
     sys.exit(1)
 
@@ -30,7 +30,7 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 # get this package's version from dbt/adapters/<name>/__version__.py
 def _get_plugin_version_dict():
     _version_path = os.path.join(
-        this_directory, 'dbt', 'adapters', 'mysql', '__version__.py'
+        this_directory, 'dbt', 'adapters', 'tidb', '__version__.py'
     )
     _semver = r'''(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)'''
     _pre = r'''((?P<prekind>a|b|rc)(?P<pre>\d+))?'''
@@ -55,10 +55,10 @@ def _get_dbt_core_version():
     return f"{minor}{pre}"
 
 
-package_name = "dbt-mysql"
+package_name = "dbt-tidb"
 package_version = "1.0.0"
 dbt_core_version = _get_dbt_core_version()
-description = """The MySQL adapter plugin for dbt"""
+description = """The TiDB adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md')) as f:
@@ -70,9 +70,9 @@ setup(
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author="Doug Beatty",
-    author_email="doug.beatty@gmail.com",
-    url="https://github.com/dbeatty10/dbt-mysql",
+    author="daemonxiao",
+    author_email="",
+    url="",
     packages=find_namespace_packages(include=['dbt', 'dbt.*']),
     include_package_data=True,
     install_requires=[

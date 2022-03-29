@@ -1,72 +1,52 @@
-# dbt-mysql
+# dbt-tidb
 
-This plugin ports [dbt](https://getdbt.com) functionality to MySQL and MariaDB.
+This repo is fork form [dbt-mysql](https://github.com/dbeatty10/dbt-mysql). We added support for [TiDB](https://en.pingcap.com/tidb/) database based on the dbt-mysql adapter. So you can use this plugin for not only MySQL and MariaDB, but also TiDB.
+More information what you want to know about dbt-mysql can be found in dbt-mysql repository.
+Here would like to focus on the TiDB adapter.
 
-This is an experimental plugin:
-- We have not tested it extensively
-- Storage engines other than the default of InnoDB are untested
-- Only tested with [dbt-adapter-tests](https://github.com/dbt-labs/dbt-adapter-tests) with the following:
-  - MySQL 5.7
-  - MySQL 8.0
-  - MariaDB 10.5
-- Compatiblity with other [dbt packages](https://hub.getdbt.com/) (like [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/)) is also untested
-
-Please read these docs carefully and use at your own risk. [Issues](https://github.com/dbeatty10/dbt-mysql/issues/new) and [PRs](https://github.com/dbeatty10/dbt-mysql/blob/main/CONTRIBUTING.rst#contributing) welcome!
+This plugin ports [dbt](https://getdbt.com) functionality to TiDB.
 
 Table of Contents
 =================
 
    * [Installation](#installation)
    * [Supported features](#supported-features)
-      * [MySQL 5.7 configuration gotchas](#mysql-57-configuration-gotchas)
-   * [Configuring your profile](#configuring-your-profile)
-   * [Notes](#notes)
+   * [Profile Configuration](#profile-configuration)
+   * [Database user Privileges](#database-user-privileges)
    * [Running Tests](#running-tests)
-   * [Reporting bugs and contributing code](#reporting-bugs-and-contributing-code)
 
 ### Installation
-This plugin can be installed via pip:
+Compile by source code.
 
 ```bash
-$ pip install dbt-mysql
+$ git clone https://github.com/Daemonxiao/dbt-tidb.git
+$ cd dbt-tidb
+$ pip install .
 ```
+TODO: Also, you can get it from pypi.
 
+```bash
+$ pip install dbt-tidb
+```
 ### Supported features
 
-| MariaDB 10.5 | MySQL 5.7 | MySQL 8.0 | Feature                     |
-|:---------:|:---------:|:---:|-----------------------------|
-|     ✅     |     ✅     |  ✅  | Table materialization       |
-|     ✅     |     ✅     |  ✅  | View materialization        |
-|     ✅     |     ✅     |  ✅  | Incremental materialization |
-|     ✅     |     ❌     |  ✅  | Ephemeral materialization   |
-|     ✅     |     ✅     |  ✅  | Seeds                       |
-|     ✅     |     ✅     |  ✅  | Sources                     |
-|     ✅     |     ✅     |  ✅  | Custom data tests           |
-|     ✅     |     ✅     |  ✅  | Docs generate               |
-|     🤷     |     🤷     |  ✅  | Snapshots                   |
+| TiDB 5.0 | Feature                     |
+|:--------:|-----------------------------|
+|    ✅     | Table materialization       |
+|    ✅     | View materialization        |
+|    ✅     | Incremental materialization |
+|    ✅     | Ephemeral materialization   |
+|    ✅     | Seeds                       |
+|    ✅     | Sources                     |
+|    ✅     | Custom data tests           |
+|    ✅     | Docs generate               |
+|    ✅     | Snapshots                   |
 
-Notes:
-- Ephemeral materializations rely upon [Common Table Expressions](https://en.wikipedia.org/wiki/Hierarchical_and_recursive_queries_in_SQL) (CTEs), which are not supported until MySQL 8.0
-- MySQL 5.7 has some configuration gotchas that affect snapshots (see below).
 
-#### MySQL 5.7 configuration gotchas
 
-dbt snapshots might not work properly due to [automatic initialization and updating for `TIMESTAMP`](https://dev.mysql.com/doc/refman/5.7/en/timestamp-initialization.html) if:
-- the output of `SHOW VARIABLES LIKE 'sql_mode'` includes `NO_ZERO_DATE`
+### Profile Configuration
 
-A solution is to include the following in a `*.cnf` file:
-```
-[mysqld]
-explicit_defaults_for_timestamp = true
-sql_mode = "ALLOW_INVALID_DATES,{other_sql_modes}"
-```
-where `{other_sql_modes}` is the rest of the modes from the `SHOW VARIABLES LIKE 'sql_mode'` output.
-
-### Configuring your profile
-
-A dbt profile can be configured to run against MySQL using configuration example below.
-
-Use `type: mysql` for MySQL 8.x, `type: mysql5` for MySQL 5.x, and `type: mariadb` for MariaDB.
+TiDB targets should be set up using the following configuration in your `profiles.yml` file.
 
 **Example entry for profiles.yml:**
 
@@ -75,64 +55,41 @@ your_profile_name:
   target: dev
   outputs:
     dev:
-      type: mysql
-      server: localhost
-      port: 3306
-      schema: analytics
-      username: your_mysql_username
-      password: your_mysql_password
+      type: tidb
+      server: 127.0.0.1
+      port: 4000
+      schema: database_name
+      username: tidb_username
+      password: tidb_password
       ssl_disabled: True
 ```
 
-| Option          | Description                                                                         | Required?                                                          | Example                                        |
-| --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------- |
-| type            | The specific adapter to use                                                         | Required                                                           | `mysql`, `mysql5` or `mariadb`                            |
-| server          | The server (hostname) to connect to                                                 | Required                                                           | `yourorg.mysqlhost.com`                        |
-| port            | The port to use                                                                     | Optional                                                           | `3306`                                         |
-| schema          | Specify the schema (database) to build models into                                  | Required                                                           | `analytics`                                    |
-| username        | The username to use to connect to the server                                        | Required                                                           | `dbt_admin`                                    |
-| password        | The password to use for authenticating to the server                                | Required                                                           | `correct-horse-battery-staple`                 |
-| ssl_disabled    | Set to enable or disable TLS connectivity to mysql5.x                               | Optional                                                           | `True` or `False`                              |
+| Option          | Description                                                                         | Required? | Example                        |
+| --------------- | ----------------------------------------------------------------------------------- |-----------|--------------------------------|
+| type            | The specific adapter to use                                                         | Required  | `tidb`                         |
+| server          | The server (hostname) to connect to                                                 | Required  | `yourorg.tidb.com`             |
+| port            | The port to use                                                                     | Required  | `4000`                         |
+| schema          | Specify the schema (database) to build models into                                  | Required  | `analytics`                    |
+| username        | The username to use to connect to the server                                        | Required  | `dbt_admin`                    |
+| password        | The password to use for authenticating to the server                                | Required  | `correct-horse-battery-staple` |
+| ssl_disabled    | Set to enable or disable TLS connectivity to mysql5.x                               | Optional  | `True` or `False`              |
 
-### Notes
+### Database user Privileges
+Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE` and so on.
+You can find some help [here](https://github.com/dbeatty10/dbt-mysql.git) about TiDB privileges management.
 
-Conflicting terminology is used between:
-- dbt
-- Database management systems (DBMS) like MySQL, Postgres, and Snowflake
-- metadata in the ANSI-standard `information_schema`
-
-The conflicts include both:
-- the same word meaning different things
-- different words meaning the same thing
-
-For example, a "database" in MySQL is not the same as a "database" in dbt, but it is equivalent to a "schema" in Postgres 🤯.
-
-dbt-mysql uses the dbt terms. The native MySQL verbiage is restricted to SQL statements.
-
-This cross-walk aligns the terminology:
-
-| information_schema    | dbt (and Postgres)           | MySQL                            |
-| --------------------- | ---------------------------- | -------------------------------- |
-| catalog               |  database                    | _undefined / not implemented_    |
-| schema                |  schema                      | database                         |
-| relation (table/view) |  relation (table/view)       | relation (table/view)            |
-| column                |  column                      | column                           |
-
-Additionally, many DBMS have relation names with three parts whereas MySQL has only two. E.g., a fully-qualified table name in Postgres is `database.schema.table` versus `database.table` in MySQL. The missing part in MySQL is the `information_schema` "catalog".
-
-| DBMS               | Fully-qualified relation name | Parts      |
-| ------------------ | ----------------------------- | ---------- |
-| Postgres           |  `database.schema.table`      | 3          |
-| MySQL              |  `database.table`             | 2          |
+| Required Privilege     |
+|------------------------|
+| SELECT                 |
+| CREATE                 |
+| CREATE TEMPORARY TABEL |
+| CREATE VIEW            |
+| INSERT                 |
+| DROP                   |
+| SHOW DATABASE          |
+| SHOW VIEW              |
+| SUPER                  |
 
 ### Running Tests
-
 See [test/README.md](test/README.md) for details on running the integration tests.
 
-### Reporting bugs and contributing code
-
--   Want to report a bug or request a feature? See the [contributing guidelines](https://github.com/dbeatty10/dbt-mysql/blob/main/CONTRIBUTING.rst#contributing), or open [an issue](https://github.com/dbeatty10/dbt-mysql/issues/new).
-
-### Credits
-
-dbt-mysql borrows from [dbt-spark](https://github.com/dbt-labs/dbt-spark) and [dbt-sqlite](https://github.com/codeforkjeff/dbt-sqlite) since Spark and SQLite also use two-part relation names.
