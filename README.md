@@ -1,7 +1,6 @@
 # dbt-tidb
 
-This repo is fork form [dbt-mysql](https://github.com/dbeatty10/dbt-mysql). We added support for [TiDB](https://en.pingcap.com/tidb/) database based on the dbt-mysql adapter. So you can use this plugin for not only MySQL and MariaDB, but also TiDB.
-More information what you want to know about dbt-mysql can be found in dbt-mysql repository.
+This repo is fork form [dbt-mysql](https://github.com/dbeatty10/dbt-mysql). We added support for [TiDB](https://en.pingcap.com/tidb/) database based on the dbt-mysql adapter. More information what you want to know about dbt-mysql can be found in dbt-mysql repository.
 Here would like to focus on the TiDB adapter.
 
 This plugin ports [dbt](https://getdbt.com) functionality to TiDB.
