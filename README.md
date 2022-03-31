@@ -29,20 +29,21 @@ $ pip install dbt-tidb
 ```
 ### Supported features
 
-| TiDB 5.X | Feature                     |
-|:--------:|-----------------------------|
-|    ✅     | Table materialization       |
-|    ✅     | View materialization        |
-|    ✅     | Incremental materialization |
-|    ✅     | Ephemeral materialization   |
-|    ✅     | Seeds                       |
-|    ✅     | Sources                     |
-|    ✅     | Custom data tests           |
-|    ✅     | Docs generate               |
-|    ✅     | Snapshots                   |
+| TiDB 5.0 ~ 5.2 | TiDB >= 5.3  | Feature                     |
+|:--------:|--------|---------------------|
+|    ✅          |    ✅        | Table materialization       |
+|    ✅          |    ✅        | View materialization        |
+|    ✅          |    ✅        | Incremental materialization |
+|    ❌          |    ✅        | Ephemeral materialization   |
+|    ✅          |    ✅        | Seeds                       |
+|    ✅          |    ✅         | Sources                     |
+|    ✅          |    ✅        | Custom data tests           |
+|    ✅          |    ✅        | Docs generate               |
+|    ❌          |    ✅        | Snapshots                   |
 
-Note: TiDB 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
-
+Note: 
+* TiDB 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
+* TiDB 5.0 ~ 5.2 is not support create [temporary table or view](https://docs.pingcap.com/tidb/v5.2/sql-statement-create-table#:~:text=sec\)-,MySQL%20compatibility,-TiDB%20does%20not).
 ### Profile Configuration
 
 TiDB targets should be set up using the following configuration in your `profiles.yml` file.
