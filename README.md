@@ -29,7 +29,7 @@ $ pip install dbt-tidb
 ```
 ### Supported features
 
-| TiDB 5.0 | Feature                     |
+| TiDB 5.X | Feature                     |
 |:--------:|-----------------------------|
 |    ✅     | Table materialization       |
 |    ✅     | View materialization        |
@@ -41,7 +41,7 @@ $ pip install dbt-tidb
 |    ✅     | Docs generate               |
 |    ✅     | Snapshots                   |
 
-
+Note: TiDB 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
 
 ### Profile Configuration
 
@@ -75,7 +75,7 @@ your_profile_name:
 
 ### Database user Privileges
 Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE` and so on.
-You can find some help [here](https://github.com/dbeatty10/dbt-mysql.git) about TiDB privileges management.
+You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-management) about TiDB privileges management.
 
 | Required Privilege     |
 |------------------------|
@@ -91,4 +91,7 @@ You can find some help [here](https://github.com/dbeatty10/dbt-mysql.git) about 
 
 ### Running Tests
 See [test/README.md](test/README.md) for details on running the integration tests.
+
+### Contributing
+Welcome to contribute for dbt-tidb. See [Contributing Guide](CONTRIBUTING.md) for more informations.
 
