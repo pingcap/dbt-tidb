@@ -41,7 +41,7 @@ $ pip install dbt-tidb
 |    ✅     | Docs generate               |
 |    ✅     | Snapshots                   |
 
-Note: TiDB 5.0 is not support [CTE](), you should aviod use `WITH` in your SQL code.
+Note: TiDB 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
 
 ### Profile Configuration
 
