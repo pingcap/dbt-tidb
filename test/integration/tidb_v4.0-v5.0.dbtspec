@@ -1,6 +1,6 @@
 target:
   type: tidb
-  port: 4000
+  port: 4002
   database: dbt_test_{{ var('_dbt_random_suffix') }}
   schema: dbt_test_{{ var('_dbt_random_suffix') }}
   # server: "{{ env_var('DBT_TIDB_SERVER_NAME', 'localhost') }}"
@@ -17,10 +17,17 @@ sequences:
 
   test_dbt_empty: empty
   test_dbt_base: base
-  test_dbt_ephemeral: ephemeral
-  test_dbt_incremental: incremental
-  test_dbt_snapshot_strategy_timestamp: snapshot_strategy_timestamp
-  test_dbt_snapshot_strategy_check_cols: snapshot_strategy_check_cols
+
+  # TiDB 4.0~5.0 does not support temporary table or temporary view.
+  # test_dbt_ephemeral: ephemeral
+
+  # TiDB 4.0~5.2 does not support 'WITH'.
+  # test_dbt_incremental: incremental
+  # test_dbt_snapshot_strategy_timestamp: snapshot_strategy_timestamp
+  # test_dbt_snapshot_strategy_check_cols: snapshot_strategy_check_cols
+
   test_dbt_data_test: data_test
   test_dbt_schema_test: schema_test
-  test_dbt_ephemeral_data_tests: data_test_ephemeral_models
+
+  # TiDB 4.0~5.0 does not support temporary table or temporary view.
+  # test_dbt_ephemeral_data_tests: data_test_ephemeral_models

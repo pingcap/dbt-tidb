@@ -1,20 +1,19 @@
 # dbt-tidb
 
-This repo is fork form [dbt-mysql](https://github.com/dbeatty10/dbt-mysql). We added support for [TiDB](https://en.pingcap.com/tidb/) database based on the dbt-mysql adapter. More information what you want to know about dbt-mysql can be found in dbt-mysql repository.
-Here would like to focus on the TiDB adapter.
+The `dbt-tidb` package contains all of the code enabling [dbt](https://getdbt.com) to work with 
+[TiDB](https://en.pingcap.com/tidb/).
 
-This plugin ports [dbt](https://getdbt.com) functionality to TiDB.
+This repository is based on [dbt-mysql](https://github.com/dbeatty10/dbt-mysql).
+Thanks to them for their excellent work.
 
-Table of Contents
-=================
+## Table of Contents
+ * [Installation](#installation)
+ * [Supported features](#supported-features)
+ * [Profile Configuration](#profile-configuration)
+ * [Database User Privileges](#database-user-privileges)
+ * [Running Tests](#running-tests)
 
-   * [Installation](#installation)
-   * [Supported features](#supported-features)
-   * [Profile Configuration](#profile-configuration)
-   * [Database user Privileges](#database-user-privileges)
-   * [Running Tests](#running-tests)
-
-### Installation
+## Installation
 Compile by source code.
 
 ```bash
@@ -27,24 +26,28 @@ TODO: Also, you can get it from pypi.
 ```bash
 $ pip install dbt-tidb
 ```
-### Supported features
+## Supported features
 
-| TiDB 4.X   | TiDB 5.0 ~ 5.2 | TiDB >= 5.3  | Feature                     |
-|:----------:|----------------|---------------------|----------------------|
-|    ✅      |     ✅        |    ✅        | Table materialization       |
-|    ✅      |       ✅      |    ✅        | View materialization        |
-|    ✅      |        ✅     |    ✅        | Incremental materialization |
-|    ❌      |        ❌     |    ✅        | Ephemeral materialization   |
-|    ✅      |        ✅     |    ✅        | Seeds                       |
-|    ✅      |         ✅    |    ✅         | Sources                     |
-|    ✅      |        ✅     |    ✅        | Custom data tests           |
-|    ✅      |         ✅    |    ✅        | Docs generate               |
-|    ❌      |        ❌     |    ✅        | Snapshots                   |
+|    TiDB 4.X    | TiDB 5.0 ~ 5.2 |   TiDB >= 5.3    |            Feature             |
+|:--------------:|:--------------:|:----------------:|:------------------------------:|
+|       ✅        |       ✅       |        ✅        |     Table materialization      |
+|       ✅        |       ✅       |        ✅        |      View materialization      |
+|       ✅        |       ✅       |        ✅        |  Incremental materialization   |
+|       ❌        |       ❌       |        ✅        |   Ephemeral materialization    |
+|       ✅        |       ✅       |        ✅        |             Seeds              |
+|       ✅        |       ✅       |        ✅        |            Sources             |
+|       ✅        |       ✅       |        ✅        |       Custom data tests        |
+|       ✅        |       ✅       |        ✅        |         Docs generate          |
+|       ❌        |       ❌       |        ✅        |           Snapshots            |
 
 Note: 
-* TiDB 4.0 ~ 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
-* TiDB 4.0 ~ 5.2 is not support create [temporary table or view](https://docs.pingcap.com/tidb/v5.2/sql-statement-create-table#:~:text=sec\)-,MySQL%20compatibility,-TiDB%20does%20not).
-* TiDB 4.X is not support use SQL func in `CREATE VIEW`, avoid it in you SQL code. You can find more detail [here](https://github.com/pingcap/tidb/pull/27252).
+
+* TiDB 4.0 ~ 5.0 does not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), 
+  you should avoid using `WITH` in your SQL code.
+* TiDB 4.0 ~ 5.2 does not support creating a [temporary table or view](https://docs.pingcap.com/tidb/v5.2/sql-statement-create-table#:~:text=sec\)-,MySQL%20compatibility,-TiDB%20does%20not).
+* TiDB 4.X does not support using SQL func in `CREATE VIEW`, avoid it in your SQL code. 
+  You can find more detail [here](https://github.com/pingcap/tidb/pull/27252).
+
 ### Profile Configuration
 
 TiDB targets should be set up using the following configuration in your `profiles.yml` file.
@@ -65,25 +68,26 @@ your_profile_name:
       ssl_disabled: True
 ```
 
-| Option          | Description                                                                         | Required? | Example                        |
-| --------------- | ----------------------------------------------------------------------------------- |-----------|--------------------------------|
-| type            | The specific adapter to use                                                         | Required  | `tidb`                         |
-| server          | The server (hostname) to connect to                                                 | Required  | `yourorg.tidb.com`             |
-| port            | The port to use                                                                     | Required  | `4000`                         |
-| schema          | Specify the schema (database) to build models into                                  | Required  | `analytics`                    |
-| username        | The username to use to connect to the server                                        | Required  | `dbt_admin`                    |
-| password        | The password to use for authenticating to the server                                | Required  | `correct-horse-battery-staple` |
-| ssl_disabled    | Set to enable or disable TLS connectivity to mysql5.x                               | Optional  | `True` or `False`              |
+| Option          | Description                                            | Required? | Example                        |
+| --------------- | ------------------------------------------------------ |-----------|--------------------------------|
+| type            | The specific adapter to use                            | Required  | `tidb`                         |
+| server          | The server (hostname) to connect to                    | Required  | `yourorg.tidb.com`             |
+| port            | The port to use                                        | Required  | `4000`                         |
+| schema          | Specify the schema (database) to build models into     | Required  | `analytics`                    |
+| username        | The username to use to connect to the server           | Required  | `dbt_admin`                    |
+| password        | The password to use for authenticating to the server   | Required  | `correct-horse-battery-staple` |
+| ssl_disabled    | Set to enable or disable TLS connectivity              | Optional  | `True` or `False`              |
 
-### Database user Privileges
-Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE` and so on.
-You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-management) about TiDB privileges management.
+### Database User Privileges
+
+Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE`, and so on.
+You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-management) with TiDB privileges management.
 
 | Required Privilege     |
 |------------------------|
 | SELECT                 |
 | CREATE                 |
-| CREATE TEMPORARY TABEL |
+| CREATE TEMPORARY TABLE |
 | CREATE VIEW            |
 | INSERT                 |
 | DROP                   |
@@ -92,8 +96,9 @@ You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-manag
 | SUPER                  |
 
 ### Running Tests
+
 See [test/README.md](test/README.md) for details on running the integration tests.
 
 ### Contributing
-Welcome to contribute for dbt-tidb. See [Contributing Guide](CONTRIBUTING.md) for more informations.
 
+Welcome to contribute for dbt-tidb. See [Contributing Guide](CONTRIBUTING.md) for more information.
