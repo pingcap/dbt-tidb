@@ -65,7 +65,6 @@ your_profile_name:
       schema: database_name
       username: tidb_username
       password: tidb_password
-      ssl_disabled: True
 ```
 
 | Option          | Description                                            | Required? | Example                        |
@@ -76,7 +75,6 @@ your_profile_name:
 | schema          | Specify the schema (database) to build models into     | Required  | `analytics`                    |
 | username        | The username to use to connect to the server           | Required  | `dbt_admin`                    |
 | password        | The password to use for authenticating to the server   | Required  | `correct-horse-battery-staple` |
-| ssl_disabled    | Set to enable or disable TLS connectivity              | Optional  | `True` or `False`              |
 
 ### Database User Privileges
 
