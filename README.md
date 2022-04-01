@@ -44,7 +44,7 @@ $ pip install dbt-tidb
 Note: 
 * TiDB 4.0 ~ 5.0 is not support [CTE](https://docs.pingcap.com/tidb/dev/sql-statement-with), you should aviod use `WITH` in your SQL code.
 * TiDB 4.0 ~ 5.2 is not support create [temporary table or view](https://docs.pingcap.com/tidb/v5.2/sql-statement-create-table#:~:text=sec\)-,MySQL%20compatibility,-TiDB%20does%20not).
-* TiDB 4.X is not support use SQL func in `CREATE VIEW`, aviod it in you SQL code. You can find more detail [here](https://github.com/pingcap/tidb/pull/27252).
+* TiDB 4.X is not support use SQL func in `CREATE VIEW`, avoid it in you SQL code. You can find more detail [here](https://github.com/pingcap/tidb/pull/27252).
 ### Profile Configuration
 
 TiDB targets should be set up using the following configuration in your `profiles.yml` file.
