@@ -35,8 +35,8 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="daemonxiao",
-    author_email="",
-    url="",
+    author_email="qiang.wu@pingcap.com",
+    url="https://github.com/pingcap/dbt-tidb.git",
     packages=find_namespace_packages(include=['dbt', 'dbt.*']),
     include_package_data=True,
     install_requires=[

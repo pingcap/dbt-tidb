@@ -21,7 +21,7 @@ $ git clone https://github.com/Daemonxiao/dbt-tidb.git
 $ cd dbt-tidb
 $ pip install .
 ```
-TODO: Also, you can get it from pypi.
+Also, you can get it from pypi.
 
 ```bash
 $ pip install dbt-tidb
