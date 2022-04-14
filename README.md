@@ -2,6 +2,7 @@
 
 ![PyPI](https://img.shields.io/pypi/v/dbt-tidb)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dbt-tidb)
+![PyPI - Downloads](https://img.shields.io/pypi/dw/dbt-tidb)
 [![Integration Test](https://github.com/pingcap/dbt-tidb/actions/workflows/main.yml/badge.svg)](https://github.com/pingcap/dbt-tidb/actions/workflows/main.yml)
 
 The `dbt-tidb` package contains all of the code enabling [dbt](https://getdbt.com) to work with 
