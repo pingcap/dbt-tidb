@@ -45,7 +45,7 @@ setup(
     ],
     zip_safe=False,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
 
         'License :: OSI Approved :: Apache Software License',
 
