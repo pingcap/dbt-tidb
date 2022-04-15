@@ -22,7 +22,7 @@ Thanks to them for their excellent work.
 Compile by source code.
 
 ```bash
-$ git clone https://github.com/Daemonxiao/dbt-tidb.git
+$ git clone https://github.com/pingcap/dbt-tidb.git
 $ cd dbt-tidb
 $ pip install .
 ```
