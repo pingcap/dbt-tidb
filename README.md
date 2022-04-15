@@ -17,6 +17,7 @@ Thanks to them for their excellent work.
  * [Profile Configuration](#profile-configuration)
  * [Database User Privileges](#database-user-privileges)
  * [Running Tests](#running-tests)
+ * [Example](#example)
 
 ## Installation
 Compile by source code.
@@ -105,3 +106,6 @@ See [test/README.md](test/README.md) for details on running the integration test
 ### Contributing
 
 Welcome to contribute for dbt-tidb. See [Contributing Guide](CONTRIBUTING.md) for more information.
+
+### Example
+Click [here](https://github.com/pingcap/dbt-tidb/wiki/Primer-Tutorial-%7C-How-to-use-dbt-with-TiDB) to see an simple exmaple about use dbt with dbt-tidb.
