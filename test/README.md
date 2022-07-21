@@ -12,7 +12,7 @@ Here are the steps to run the tests:
 Assuming the applicable `pytest-dbt-adapter` package is installed and environment variables are set:
 ```bash
 export DBT_TIDB_SERVER_NAME=tidb-server
-export DBT_TIDB_SERVER_NAME=user_name
+export DBT_TIDB_USERNAME=user_name
 export DBT_TIDB_PASSWORD=password
 
 pytest test/tidb.dbtspec
@@ -22,12 +22,14 @@ pytest test/tidb.dbtspec
 
 ### Prerequisites
 - [`pytest-dbt-adapter`](https://github.com/dbt-labs/dbt-adapter-tests) package
+- `pip install -r requirements_dev.txt`
+- `pip install .`
 
 ### Database parameters
 
 * **By environment variables:** Create the following environment variables (e.g., `export {VARIABLE}={value}` in a bash shell or via a tool like [`direnv`](https://direnv.net/)):
      `DBT_TIDB_SERVER_NAME`, 
-     `DBT_TIDB_SERVER_NAME`, 
+     `DBT_TIDB_USERNAME`, 
      `DBT_TIDB_PASSWORD`
 
 * **By spec file:** Modify parameters such as the `username`, `password`, and `server` in all the [configuration files](integration/tidb.dbtspec).
