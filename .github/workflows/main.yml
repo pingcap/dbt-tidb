@@ -12,7 +12,7 @@ jobs:
 
     services:
       tidb_nightly:
-        image: pingcap/tidb:nightly
+        image: pingcap/tidb:v5.3.0
         ports:
           - 4000:4000
       tidb_5.1:
@@ -39,13 +39,13 @@ jobs:
 
     - name: Run tests tidb_nightly
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb.dbtspec
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb.py
 
     - name: Run tests tidb_v5.0.1 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5.1-v5.2.dbtspec
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5.1-v5.2.py
 
     - name: Run tests tidb_v4.0.0 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4.0-v5.0.dbtspec
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4.0-v5.0.py
         

@@ -25,7 +25,7 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 
 package_name = "dbt-tidb"
 package_version = "1.0.0"
-dbt_core_version = "1.0.1"
+dbt_core_version = "1.1.0"
 description = """The TiDB adapter plugin for dbt"""
 
 setup(
