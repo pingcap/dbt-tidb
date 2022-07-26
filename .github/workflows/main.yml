@@ -43,9 +43,9 @@ jobs:
 
     - name: Run tests tidb_v5.0.1 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5.1-v5.2.py
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5_1_v5_2.py
 
     - name: Run tests tidb_v4.0.0 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4.0-v5.0.py
+        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4_0_v5_0.py
         
