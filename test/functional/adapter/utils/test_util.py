@@ -39,6 +39,7 @@ class TestBoolOr(BaseBoolOr):
       ),
     }
 
+
 class TestCastBoolToText(BaseCastBoolToText):
   pass
 
