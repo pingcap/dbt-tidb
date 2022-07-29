@@ -15,7 +15,7 @@ from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenReferences,Bas
 from dbt.tests.adapter.basic.expected_catalog import no_stats
 from dbt.tests.util import run_dbt, check_relations_equal
 
-from tidb_expected_catalog import tidb_expected_references_catalog
+from test.functional.adapter.basic.tidb_expected_catalog import tidb_expected_references_catalog
 
 
 class TestEmptyMyAdapter(BaseEmpty):
