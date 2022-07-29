@@ -10,23 +10,13 @@ from dbt.tests.adapter.basic.test_generic_tests import BaseGenericTests
 from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCols
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
 from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
-from dbt.tests.util import run_dbt, check_relations_equal
-from dbt.tests.adapter.basic.expected_catalog import no_stats
-from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenReferences,BaseDocsGenerate
 from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
+from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenReferences,BaseDocsGenerate
+from dbt.tests.adapter.basic.expected_catalog import no_stats
+from dbt.tests.util import run_dbt, check_relations_equal
 
-from test.functional.adapter.basic.tidb_expected_catalog import tidb_expected_references_catalog
+from tests.functional.adapter.basic.tidb_expected_catalog import tidb_expected_references_catalog
 
-@pytest.fixture(scope="class")
-def dbt_profile_target():
-  return {
-    'type': 'tidb',
-    'threads': 1,
-    'host': '127.0.0.1',
-    'user': 'root',
-    'password': '',
-    'port': 4002,
-  }
 
 class TestEmptyMyAdapter(BaseEmpty):
   pass
@@ -35,24 +25,24 @@ class TestEmptyMyAdapter(BaseEmpty):
 class TestSimpleMaterializationsMyAdapter(BaseSimpleMaterializations):
   pass
 
-@pytest.mark.skip(reason="unsupport")
+
 class TestEphemeralMyAdapter(BaseEphemeral):
   pass
 
-@pytest.mark.skip(reason="unsupport")
+
 class TestIncrementalMyAdapter(BaseIncremental):
   pass
 
-@pytest.mark.skip(reason="unsupport")
+@pytest.mark.skip(reason="need to fix")
 class TestSnapshotCheckColsMyAdapter(BaseSnapshotCheckCols):
   pass
 
-@pytest.mark.skip(reason="unsupport")
+
 class TestSnapshotTimestampMyAdapter(BaseSnapshotTimestamp):
   pass
 
 
-@pytest.mark.skip(reason="unsupport")
+
 class TestSingularTestsEphemeral(BaseSingularTestsEphemeral):
   pass
 
@@ -66,6 +56,7 @@ class TestGenericTestsMyAdapter(BaseGenericTests):
 
 
 class TestBaseAdapterMethod(BaseAdapterMethod):
+  pass
   def test_adapter_methods(self, project, equal_tables):
     result = run_dbt()
     assert len(result) == 3

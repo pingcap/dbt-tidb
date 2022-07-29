@@ -39,16 +39,16 @@ jobs:
 
     - name: Run tests tidb_nightly
       run: |
-        PYTHONPATH=. pytest test/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest test/functional/adapter/basic/test_tidb.py
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
 
     - name: Run tests tidb_v5.0.1 up
       run: |
-        PYTHONPATH=. pytest test/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest test/functional/adapter/basic/test_tidb_v5_1_v5_2.py
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
 
     - name: Run tests tidb_v4.0.0 up
       run: |
-        PYTHONPATH=. pytest test/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest test/functional/adapter/basic/test_tidb_v4_0_v5_0.py
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
         

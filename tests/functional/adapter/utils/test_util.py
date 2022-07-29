@@ -19,10 +19,10 @@ from dbt.tests.adapter.utils.test_safe_cast import BaseSafeCast
 from dbt.tests.adapter.utils.test_split_part import BaseSplitPart
 from dbt.tests.adapter.utils.test_string_literal import BaseStringLiteral
 from dbt.tests.adapter.utils.test_listagg import BaseListagg
-from test.functional.adapter.utils.fixture_bool_or import models__test_bool_or_sql, models__test_bool_or_yml
-from test.functional.adapter.utils.fixture_dateadd import models__test_dateadd_yml, models__test_dateadd_sql
-from test.functional.adapter.utils.fixture_datediff import seeds__data_datediff_csv, models__test_datediff_sql, models__test_datediff_yml
-from test.functional.adapter.utils.fixture_safe_cast import models__test_safe_cast_yml, models__test_safe_cast_sql
+from tests.functional.adapter.utils.fixture_bool_or import models__test_bool_or_sql, models__test_bool_or_yml
+from tests.functional.adapter.utils.fixture_dateadd import models__test_dateadd_yml, models__test_dateadd_sql
+from tests.functional.adapter.utils.fixture_datediff import seeds__data_datediff_csv, models__test_datediff_sql, models__test_datediff_yml
+from tests.functional.adapter.utils.fixture_safe_cast import models__test_safe_cast_yml, models__test_safe_cast_sql
 
 
 class TestAnyValue(BaseAnyValue):

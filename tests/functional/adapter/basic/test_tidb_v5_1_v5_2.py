@@ -15,7 +15,7 @@ from dbt.tests.adapter.basic.expected_catalog import no_stats
 from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenReferences,BaseDocsGenerate
 from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
 
-from test.functional.adapter.basic.tidb_expected_catalog import tidb_expected_references_catalog
+from tests.functional.adapter.basic.tidb_expected_catalog import tidb_expected_references_catalog
 
 @pytest.fixture(scope="class")
 def dbt_profile_target():
