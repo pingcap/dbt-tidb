@@ -11,6 +11,8 @@
 
   {%- set strategy_name = config.get('strategy') -%}
   {%- set unique_key = config.get('unique_key') %}
+ -- grab current tables grants config for comparision later on
+  {%- set grant_config = config.get('grants') -%}
 
   {% if not adapter.check_schema_exists(model.database, model.schema) %}
     {% do create_schema(model.database, model.schema) %}
@@ -98,6 +100,9 @@
 
   {% endif %}
 
+  {% set should_revoke = should_revoke(target_relation_exists, full_refresh_mode=False) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
+
   {% do persist_docs(target_relation, model) %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}
@@ -114,7 +119,7 @@
 
 {% endmaterialization %}
 
-{% macro snapshot_check_all_get_existing_columns(node, target_exists) -%}
+{% macro snapshot_check_all_get_existing_columns(node, target_exists, check_cols_config) -%}
     {%- set query_columns = get_columns_in_query(node['compiled_sql']) -%}
     {%- if not target_exists -%}
         {# no table yet -> return whatever the query does #}
