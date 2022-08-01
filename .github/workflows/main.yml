@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Python 3.8 | TiDB nightly | Ubuntu latest
+    name: Python 3.10 | TiDB nightly | Ubuntu latest
     runs-on: ubuntu-latest
 
     services:
