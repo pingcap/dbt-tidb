@@ -24,8 +24,8 @@ with open(os.path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 package_name = "dbt-tidb"
-package_version = "1.0.0"
-dbt_core_version = "1.0.1"
+package_version = "1.2.0"
+dbt_core_version = "1.2.0"
 description = """The TiDB adapter plugin for dbt"""
 
 setup(
@@ -53,9 +53,9 @@ setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX :: Linux',
 
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
-    python_requires=">=3.7,<3.10",
+    python_requires=">=3.8,<=3.10",
 )

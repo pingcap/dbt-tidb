@@ -7,6 +7,9 @@
   {% set existing_relation = load_relation(this) %}
   {% set tmp_relation = make_temp_relation(this) %}
 
+   -- grab current tables grants config for comparision later on
+  {% set grant_config = config.get('grants') %}
+
   {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
   -- `BEGIN` happens here:
@@ -30,17 +33,22 @@
       {% do adapter.expand_target_column_types(
              from_relation=tmp_relation,
              to_relation=target_relation) %}
-      {% set build_sql = incremental_delete(tmp_relation, target_relation, unique_key=unique_key, statement_name="pre_main") %}
+     {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
+     --  use get_delete_insert_merge_sql after support mutil sql
+     --  we will delete then insert now
+     {% set build_sql = incremental_delete(target_relation, tmp_relation, unique_key, dest_columns) %}
       {% call statement("pre_main") %}
           {{ build_sql }}
       {% endcall %}
-      {% set build_sql = incremental_insert(tmp_relation, target_relation, unique_key=unique_key) %}
+     {% set build_sql = incremental_insert(target_relation, tmp_relation, unique_key, dest_columns) %}
   {% endif %}
 
   {% call statement("main") %}
       {{ build_sql }}
   {% endcall %}
 
+  {% set should_revoke = should_revoke(existing_relation, full_refresh_mode) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
   {% do persist_docs(target_relation, model) %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}

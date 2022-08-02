@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Python 3.8 | TiDB nightly | Ubuntu latest
+    name: Python 3.10 | TiDB nightly | Ubuntu latest
     runs-on: ubuntu-latest
 
     services:
@@ -31,21 +31,42 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.10'
 
     - name: Install requirements
       run: |
         pip install -r requirements_dev.txt
 
+      # we need to create user and export DBT_TEST_USER before grant test
     - name: Run tests tidb_nightly
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb.dbtspec
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
+        
+        mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+        export DBT_TEST_USER_1=user1
+        export DBT_TEST_USER_2=user2
+        export DBT_TEST_USER_3=user3
+        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
 
-    - name: Run tests tidb_v5.0.1 up
+    - name: Run tests tidb_v5.1.0 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5.1-v5.2.dbtspec
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
+        
+        mysql -P4001 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+        export DBT_TEST_USER_1=user1
+        export DBT_TEST_USER_2=user2
+        export DBT_TEST_USER_3=user3
+        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
 
     - name: Run tests tidb_v4.0.0 up
       run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4.0-v5.0.dbtspec
+        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
         
+        mysql -P4002 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+        export DBT_TEST_USER_1=user1
+        export DBT_TEST_USER_2=user2
+        export DBT_TEST_USER_3=user3
+        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py

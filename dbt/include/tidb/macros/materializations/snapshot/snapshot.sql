@@ -11,6 +11,8 @@
 
   {%- set strategy_name = config.get('strategy') -%}
   {%- set unique_key = config.get('unique_key') %}
+ -- grab current tables grants config for comparision later on
+  {%- set grant_config = config.get('grants') -%}
 
   {% if not adapter.check_schema_exists(model.database, model.schema) %}
     {% do create_schema(model.database, model.schema) %}
@@ -98,6 +100,9 @@
 
   {% endif %}
 
+  {% set should_revoke = should_revoke(target_relation_exists, full_refresh_mode=False) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
+
   {% do persist_docs(target_relation, model) %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}
@@ -113,27 +118,3 @@
   {{ return({'relations': [target_relation]}) }}
 
 {% endmaterialization %}
-
-{% macro snapshot_check_all_get_existing_columns(node, target_exists) -%}
-    {%- set query_columns = get_columns_in_query(node['compiled_sql']) -%}
-    {%- if not target_exists -%}
-        {# no table yet -> return whatever the query does #}
-        {{ return([false, query_columns]) }}
-    {%- endif -%}
-    {# handle any schema changes #}
-    {%- set target_table = node.get('alias', node.get('name')) -%}
-    {%- set target_relation = adapter.get_relation(database=None, schema=node.schema, identifier=target_table) -%}
-    {%- set existing_cols = get_columns_in_query('select * from ' ~ target_relation) -%}
-    {%- set ns = namespace() -%} {# handle for-loop scoping with a namespace #}
-    {%- set ns.column_added = false -%}
-
-    {%- set intersection = [] -%}
-    {%- for col in query_columns -%}
-        {%- if col in existing_cols -%}
-            {%- do intersection.append(col) -%}
-        {%- else -%}
-            {% set ns.column_added = true %}
-        {%- endif -%}
-    {%- endfor -%}
-    {{ return([ns.column_added, intersection]) }}
-{%- endmacro %}
