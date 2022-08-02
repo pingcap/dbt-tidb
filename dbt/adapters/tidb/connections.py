@@ -95,6 +95,7 @@ class TiDBConnectionManager(SQLConnectionManager):
             handle = mysql.connector.connect(**kwargs)
             return handle
 
+        # we just retry for any error now
         retryable_exceptions = [
                  mysql.connector.Error
         ]

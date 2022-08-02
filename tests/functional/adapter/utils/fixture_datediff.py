@@ -1,4 +1,4 @@
-# datediff
+# datediff in dbt-tidb will round down rather than round up
 
 # change 2019-12-31 00:00:00,2020-01-06 02:00:00,week,1 to 2019-12-31 00:00:00,2020-01-07 02:00:00,week,1
 # change 2019-12-31 00:00:00,2019-12-27 00:00:00,week,-1 to 2019-12-31 00:00:00,2019-12-24 00:00:00,week,-1

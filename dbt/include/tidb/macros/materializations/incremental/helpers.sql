@@ -1,3 +1,4 @@
+-- need to support unique_key is sequence
 {% macro incremental_delete(target, source, unique_key, dest_columns) %}
 
     {% if unique_key %}

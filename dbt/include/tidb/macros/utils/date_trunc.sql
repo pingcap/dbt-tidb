@@ -1,3 +1,4 @@
+-- date_trunc can truncate date with given datepart(year,month,quarter,day is supported)
 {% macro tidb__date_trunc(datepart, date) -%}
 
      {%- if datepart =='day' -%}

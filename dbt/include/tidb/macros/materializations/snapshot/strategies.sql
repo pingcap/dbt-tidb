@@ -6,6 +6,7 @@
     {%- endfor -%}))
 {%- endmacro %}
 
+-- copy from dbt-core v1.2, just alter database=None in adapter.get_relation
 {% macro snapshot_check_all_get_existing_columns(node, target_exists, check_cols_config) -%}
     {%- if not target_exists -%}
         {#-- no table yet -> return whatever the query does --#}

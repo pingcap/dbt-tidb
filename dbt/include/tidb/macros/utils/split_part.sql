@@ -1,3 +1,4 @@
+-- split_part will split string with given delimiter_text, and it will return the element at element
 {% macro tidb__split_part(string_text, delimiter_text, part_number) %}
 
 

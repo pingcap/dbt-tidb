@@ -4,7 +4,7 @@ abc,abc
 ,
 """
 
-
+# tidb does not support cast to text, so cast to char
 models__test_safe_cast_sql = """
 with data as (
     select * from {{ ref('data_safe_cast') }}

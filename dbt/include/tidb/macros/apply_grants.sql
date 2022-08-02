@@ -1,3 +1,4 @@
+-- support Select/Insert/Delete/Update now
 {% macro default__get_show_grant_sql(relation) %}
 
     select case(Table_priv) when null then null else 'select' end as privilege_type, `User` as grantee from mysql.tables_priv  where `DB` = '{{relation.schema}}' and `Table_name` = '{{relation.identifier}}' and Table_priv like '%Select%'
