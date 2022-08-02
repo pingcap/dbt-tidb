@@ -3,62 +3,84 @@
 ## Overview
 
 Here are the steps to run the tests:
-1. Set environment variables
-1. Run Docker containers (optional)
-1. Run tests
+1. Set up
+2. Set environment variables
+3. Run TiDB
+4. Run tests
 
-## Simple example
+## Set up
 
-Assuming the applicable `pytest-dbt-adapter` package is installed and environment variables are set:
+Make sure you have python environment
 ```bash
-export DBT_TIDB_SERVER_NAME=tidb-server
-export DBT_TIDB_SERVER_NAME=user_name
-export DBT_TIDB_PASSWORD=password
-
-pytest test/tidb.dbtspec
+pip3 install -r requirements_dev.txt
+pip3 install .
 ```
 
-## Full example
+## Set environment variables
 
-### Prerequisites
-- [`pytest-dbt-adapter`](https://github.com/dbt-labs/dbt-adapter-tests) package
+If you don't set environment variables, the default value will be used 
+```bash
+export TIDB_TEST_HOST=tidb-server # default '127.0.0.1'
+export TIDB_TEST_USER=user_name # default 'root'
+export TIDB_TEST_PASSWORD=password # default ''
+export TIDB_TEST_PORT=port # default 4000
+```
 
-### Database parameters
+You can also change the default value in `conftest.py`
 
-* **By environment variables:** Create the following environment variables (e.g., `export {VARIABLE}={value}` in a bash shell or via a tool like [`direnv`](https://direnv.net/)):
-     `DBT_TIDB_SERVER_NAME`, 
-     `DBT_TIDB_SERVER_NAME`, 
-     `DBT_TIDB_PASSWORD`
+## Run TiDB
 
-* **By spec file:** Modify parameters such as the `username`, `password`, and `server` in all the [configuration files](integration/tidb.dbtspec).
-
-If you use any bash special characters in your password (like `$`), then you will need to escape them (like `DBT_TIDB_PASSWORD=pas\$word` instead of `DBT_TIDB_PASSWORD=pas$word`).
-
-### (Optional) Docker
-
-Here has a reference. You can also install TiDB contianer using the following command.
-
-We need three containers with different TiDB version.
+You can run TiDB with docker, here is a reference:
 
 ```
 # tidb:nightly
 docker pull pingcap/tidb:nightly
 docker run -d --name tidb -p 4000:4000 pingcap/tidb:nightly
-#tidb:v5.1.0
+# tidb:v5.1.0
 docker pull pingcap/tidb:v5.1.0
 docker run -d --name tidb -p 4001:4000 pingcap/tidb:v5.1.0
-#tidb:v4.0.0
+# tidb:v4.0.0
 docker pull pingcap/tidb:v4.0.0
 docker run -d --name tidb -p 4002:4000 pingcap/tidb:v4.0.0
 ```
 
-
-
-### Run tests
-
-Run the test specs in this repository:
+You can also install tidb with TiUP playground or other way.
 ```
-pytest -v test/integration/tidb.dbtspec && \
-pytest -v test/integration/tidb_v4.0-v5.0.dbtspec && \
-pytest -v test/integration/tidb_v5.1-v5.2.dbtspec
+tiup playground ${version}
 ```
+
+## Use pytest to test
+
+If you specify a package, all python files under the package will be tested. Don't forget to config PYTHONPATH:
+```
+# basic
+PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
+# utils
+PYTHONPATH=. pytest tests/functional/adapter/utils
+```
+
+## Test grant
+When you test grant, you need to create three users in TiDB and set environment variables like:
+```
+export DBT_TEST_USER_1=user1
+export DBT_TEST_USER_2=user2
+export DBT_TEST_USER_3=user3
+```
+Then test grant:
+```
+PYTHONPATH=. pytest tests/functional/adapter/grant
+```
+
+## Test other version of TiDB
+
+> Make sure you have installed the corresponding TiDB Version
+
+We need to test for TiDB 4.0-5.0 and TiDB 5.1-5.2 for they are partly incompatible with latest TiDB. `test_tidb_v4_0_v5_0` and `test_tidb_v5_1_v5_2` under the tests/functional/adapter/basic is the test for them.
+
+
+Pay attention that the default port for `test_tidb_v4_0_v5_0` is 4002 and for `test_tidb_v5_1_v5_2` is 4001. You can change it by:
+```
+export TIDB_TEST_PORT=port
+```
+
+Now only tests under basic need to test different versions of TiDB

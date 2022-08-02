@@ -13,11 +13,8 @@ def dbt_profile_target():
   return {
     'type': 'tidb',
     'threads': 1,
-    #'host': os.getenv('TIDB_TEST_HOST'),
-    #'user': os.getenv('TIDB_TEST_USER'),
-    #'password': os.getenv('TIDB_TEST_PASSWORD'),
-    'host': '127.0.0.1',
-    'user': 'root',
-    'password': '',
-    'port': 4000,
+    'host': os.getenv('TIDB_TEST_HOST', '127.0.0.1'),
+    'user': os.getenv('TIDB_TEST_USER', 'root'),
+    'password': os.getenv('TIDB_TEST_PASSWORD', ''),
+    'port': os.getenv('TIDB_TEST_PORT', 4000),
   }

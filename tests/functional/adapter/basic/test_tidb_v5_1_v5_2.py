@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from dbt.tests.adapter.basic.test_base import BaseSimpleMaterializations
@@ -21,10 +23,10 @@ def dbt_profile_target():
   return {
     'type': 'tidb',
     'threads': 1,
-    'host': '127.0.0.1',
-    'user': 'root',
-    'password': '',
-    'port': 4001,
+    'host': os.getenv('TIDB_TEST_HOST', '127.0.0.1'),
+    'user': os.getenv('TIDB_TEST_USER', 'root'),
+    'password': os.getenv('TIDB_TEST_PASSWORD', ''),
+    'port': os.getenv('TIDB_TEST_PORT', 4001),
   }
 
 
