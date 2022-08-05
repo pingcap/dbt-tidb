@@ -10,7 +10,7 @@ Here are the steps to run the tests:
 
 ## Set up
 
-Make sure you have python environment
+Make sure you have python environment, you can find the supported python version in setup.py
 ```bash
 pip3 install -r requirements_dev.txt
 pip3 install .
@@ -44,7 +44,7 @@ docker pull pingcap/tidb:v4.0.0
 docker run -d --name tidb -p 4002:4000 pingcap/tidb:v4.0.0
 ```
 
-You can also install tidb with TiUP playground or other way.
+You can also install tidb with [TiUP playground](https://docs.pingcap.com/tidb/stable/tiup-playground) or other way.
 ```
 tiup playground ${version}
 ```
@@ -60,6 +60,7 @@ PYTHONPATH=. pytest tests/functional/adapter/utils
 ```
 
 ## Test grant
+
 When you test grant, you need to create three users in TiDB and set environment variables like:
 ```
 export DBT_TEST_USER_1=user1
