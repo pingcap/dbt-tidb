@@ -61,8 +61,6 @@
                 `{{ row[0] }}`
                 {{ row[1] }}
                 {% if row[2] == "NO" %} not null {% endif %}
-                {% if row[3] == "PRI" %} primary key {% endif %}
-                {% if row[3] == "UNI" %} unique {% endif %}
                 {% if not loop.last %},{% endif %}
             {% endfor %}
         )
