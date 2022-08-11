@@ -58,7 +58,7 @@
         {{ relation.include(database=False) }}
         (
             {% for row in table %}
-                {{ row[0] }}
+                `{{ row[0] }}`
                 {{ row[1] }}
                 {% if row[2] == "NO" %} not null {% endif %}
                 {% if row[3] == "PRI" %} primary key {% endif %}
