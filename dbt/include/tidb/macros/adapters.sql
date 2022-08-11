@@ -67,7 +67,7 @@
     {% endcall %}
 
     {# 3. copy data from view to table #}
-    {% call statement ('cpoy_data_from_view_to_table') %}
+    {% call statement ('copy_data_from_view_to_table') %}
         insert into {{ relation.include(database=False) }} select * from {{ relation.schema }}.{{ temp_view }}
     {% endcall %}
 
