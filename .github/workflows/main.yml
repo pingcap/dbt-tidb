@@ -73,7 +73,6 @@ jobs:
 
       - name: Run tests
         run: |
-          export TIDB_TEST_PORT='4001'
           PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
           PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
         
