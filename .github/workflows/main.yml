@@ -73,7 +73,6 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
           PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
         
           mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
@@ -111,7 +110,6 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
           PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
         
           mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
