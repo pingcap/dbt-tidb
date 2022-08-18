@@ -45,7 +45,7 @@ jobs:
           PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py    
 
   tidb_5_1:
-    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
+    name: Python ${{ matrix.python-version }} | TiDB 5.1 | Ubuntu latest
     runs-on: ubuntu-latest
 
     strategy:
@@ -83,7 +83,7 @@ jobs:
           PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
 
   tidb_4_0:
-    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
+    name: Python ${{ matrix.python-version }} | TiDB 4.0 | Ubuntu latest
     runs-on: ubuntu-latest
 
     strategy:
