@@ -51,7 +51,7 @@ tiup playground ${version}
 
 ## Use pytest to test
 
-If you specify a package, all python files under the package will be tested. Don't forget to config PYTHONPATH:
+If you specify a package, all Python files under the package will be tested. Don't forget to configure PYTHONPATH:
 ```
 # basic
 PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
@@ -78,4 +78,4 @@ PYTHONPATH=. pytest tests/functional/adapter/grant
 
 We need to test for TiDB 4.0-5.0 and TiDB 5.1-5.2 for they are partly incompatible with latest TiDB. `test_tidb_v4_0_v5_0` and `test_tidb_v5_1_v5_2` under the tests/functional/adapter/basic is the test for them.
 
-Now only tests under basic need to test different versions of TiDB
+Now only tests under basic need to test different versions of TiDB.
