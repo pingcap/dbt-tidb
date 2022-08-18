@@ -61,7 +61,7 @@ PYTHONPATH=. pytest tests/functional/adapter/utils
 
 ## Test grant
 
-When you test grant, you need to create three users in TiDB and set environment variables like:
+When you test grant, you need to [create three users](https://docs.pingcap.com/tidb/stable/basic-sql-operations#create-authorize-and-delete-a-user) in TiDB and set environment variables like:
 ```
 export DBT_TEST_USER_1=user1
 export DBT_TEST_USER_2=user2

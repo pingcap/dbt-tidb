@@ -6,67 +6,116 @@ on:
     branches: main
 
 jobs:
-  build:
-    name: Python 3.10 | TiDB nightly | Ubuntu latest
+  tidb_nightly:
+    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
 
     services:
       tidb_nightly:
         image: pingcap/tidb:nightly
         ports:
           - 4000:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
+          
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
+          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py    
+
+  tidb_5_1:
+    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
       tidb_5.1:
         image: pingcap/tidb:v5.1.0
         ports:
           - 4001:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
+        
+          mysql -P4001 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
+          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
+
+  tidb_4_0:
+    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
       tidb_4.0:
         image: pingcap/tidb:v4.0.0
         ports:
           - 4002:4000
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install requirements
-      run: |
-        pip install -r requirements_dev.txt
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
 
-      # we need to create user and export DBT_TEST_USER before grant test
-    - name: Run tests tidb_nightly
-      run: |
-        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
+          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
         
-        mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
-        export DBT_TEST_USER_1=user1
-        export DBT_TEST_USER_2=user2
-        export DBT_TEST_USER_3=user3
-        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
-
-    - name: Run tests tidb_v5.1.0 up
-      run: |
-        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
-        
-        mysql -P4001 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
-        export DBT_TEST_USER_1=user1
-        export DBT_TEST_USER_2=user2
-        export DBT_TEST_USER_3=user3
-        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
-
-    - name: Run tests tidb_v4.0.0 up
-      run: |
-        PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
-        PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
-        
-        mysql -P4002 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
-        export DBT_TEST_USER_1=user1
-        export DBT_TEST_USER_2=user2
-        export DBT_TEST_USER_3=user3
-        PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
+          mysql -P4002 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
+          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
