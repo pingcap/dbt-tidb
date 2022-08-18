@@ -78,10 +78,4 @@ PYTHONPATH=. pytest tests/functional/adapter/grant
 
 We need to test for TiDB 4.0-5.0 and TiDB 5.1-5.2 for they are partly incompatible with latest TiDB. `test_tidb_v4_0_v5_0` and `test_tidb_v5_1_v5_2` under the tests/functional/adapter/basic is the test for them.
 
-
-Pay attention that the default port for `test_tidb_v4_0_v5_0` is 4002 and for `test_tidb_v5_1_v5_2` is 4001. You can change it by:
-```
-export TIDB_TEST_PORT=port
-```
-
 Now only tests under basic need to test different versions of TiDB

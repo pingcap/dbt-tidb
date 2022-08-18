@@ -18,16 +18,6 @@ from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenerate
 from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
 from dbt.tests.adapter.incremental.test_incremental_unique_id import BaseIncrementalUniqueKey
 
-@pytest.fixture(scope="class")
-def dbt_profile_target():
-  return {
-    'type': 'tidb',
-    'threads': 1,
-    'host': os.getenv('TIDB_TEST_HOST', '127.0.0.1'),
-    'user': os.getenv('TIDB_TEST_USER', 'root'),
-    'password': os.getenv('TIDB_TEST_PASSWORD', ''),
-    'port': os.getenv('TIDB_TEST_PORT', 4002),
-  }
 
 class TestEmptyMyAdapter(BaseEmpty):
   pass

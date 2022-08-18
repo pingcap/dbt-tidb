@@ -56,7 +56,7 @@ jobs:
       tidb_5.1:
         image: pingcap/tidb:v5.1.0
         ports:
-          - 4001:4000
+          - 4000:4000
 
     steps:
       - name: Checkout
@@ -73,10 +73,11 @@ jobs:
 
       - name: Run tests
         run: |
+          export TIDB_TEST_PORT='4001'
           PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
           PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
         
-          mysql -P4001 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3
@@ -94,7 +95,7 @@ jobs:
       tidb_4.0:
         image: pingcap/tidb:v4.0.0
         ports:
-          - 4002:4000
+          - 4000:4000
 
     steps:
       - name: Checkout
@@ -114,7 +115,7 @@ jobs:
           PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
           PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
         
-          mysql -P4002 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3

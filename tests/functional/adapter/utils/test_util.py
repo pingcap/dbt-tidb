@@ -48,8 +48,6 @@ class TestConcat(BaseConcat):
   pass
 
 
-
-
 class TestDateAdd(BaseDateAdd):
   @pytest.fixture(scope="class")
   def models(self):
