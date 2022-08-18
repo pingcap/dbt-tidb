@@ -19,7 +19,7 @@
     revoke {{ privilege }} on {{ relation }} from {{ '\"' + grantees|join('\", \"') + '\"' }}
 {%- endmacro -%}
 
--- tidb-dbt does not support multi=true now,so we need to split every grant/revoke statement
+-- tidb-dbt does not support multi=true now, so we need to split every grant/revoke statement
 {% macro tidb__call_dcl_statements(dcl_statement_list) %}
     {% for dcl_statement in dcl_statement_list %}
         {% call statement('grant_or_revoke') %}
