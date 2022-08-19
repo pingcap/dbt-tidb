@@ -26,11 +26,11 @@ from tests.functional.adapter.tidb4_0.utils.fixture_datetrunc import models__tes
 from tests.functional.adapter.tidb4_0.utils.fixture_safe_cast import models__test_safe_cast_yml, models__test_safe_cast_sql
 from tests.functional.adapter.tidb4_0.utils.fixture_split_part import models__test_split_part_yml, models__test_split_part_sql
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestAnyValue(BaseAnyValue):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestBoolOr(BaseBoolOr):
   @pytest.fixture(scope="class")
   def models(self):
@@ -41,15 +41,15 @@ class TestBoolOr(BaseBoolOr):
       ),
     }
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestCastBoolToText(BaseCastBoolToText):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestConcat(BaseConcat):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestDateAdd(BaseDateAdd):
   @pytest.fixture(scope="class")
   def models(self):
@@ -60,7 +60,7 @@ class TestDateAdd(BaseDateAdd):
       ),
     }
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestDateDiff(BaseDateDiff):
   @pytest.fixture(scope="class")
   def seeds(self):
@@ -75,7 +75,7 @@ class TestDateDiff(BaseDateDiff):
     }
 
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestDateTrunc(BaseDateTrunc):
   @pytest.fixture(scope="class")
   def models(self):
@@ -90,23 +90,23 @@ class TestDateTrunc(BaseDateTrunc):
 class TestEscapeSingleQuotes(BaseEscapeSingleQuotesQuote):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestExcept(BaseExcept):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestHash(BaseHash):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestIntersect(BaseIntersect):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestLastDay(BaseLastDay):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestLength(BaseLength):
   pass
 
@@ -115,19 +115,19 @@ class TestLength(BaseLength):
 class TestListagg(BaseListagg):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestPosition(BasePosition):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestReplace(BaseReplace):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestRight(BaseRight):
   pass
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestSafeCast(BaseSafeCast):
   @pytest.fixture(scope="class")
   def models(self):
@@ -139,7 +139,7 @@ class TestSafeCast(BaseSafeCast):
       ),
     }
 
-
+@pytest.mark.skip(reason="need to rewrite test for TiDB4.x does not support CTE")
 class TestSplitPart(BaseSplitPart):
   @pytest.fixture(scope="class")
   def models(self):
