@@ -35,14 +35,11 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH=. pytest tests/functional/adapter/utils/test_util.py
-          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb.py
-          
-          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3
-          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py    
+          PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
   tidb_5_1:
     name: Python ${{ matrix.python-version }} | TiDB 5.1 | Ubuntu latest
@@ -54,7 +51,7 @@ jobs:
 
     services:
       tidb_5.1:
-        image: pingcap/tidb:v5.1.0
+        image: pingcap/tidb:v5.1.4
         ports:
           - 4000:4000
 
@@ -73,13 +70,11 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v5_1_v5_2.py
-        
-          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb5_1/grant/create_user.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3
-          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
+          PYTHONPATH=. pytest tests/functional/adapter/tidb5_1
 
   tidb_4_0:
     name: Python ${{ matrix.python-version }} | TiDB 4.0 | Ubuntu latest
@@ -91,7 +86,7 @@ jobs:
 
     services:
       tidb_4.0:
-        image: pingcap/tidb:v4.0.0
+        image: pingcap/tidb:v4.0.16
         ports:
           - 4000:4000
 
@@ -110,10 +105,8 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH=. pytest tests/functional/adapter/basic/test_tidb_v4_0_v5_0.py
-        
-          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/grant/create_user.sql
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb4_0/grant/create_user.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3
-          PYTHONPATH=. pytest tests/functional/adapter/grant/test_grant.py
+          PYTHONPATH=. pytest tests/functional/adapter/tidb4_0

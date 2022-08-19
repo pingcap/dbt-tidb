@@ -5,14 +5,13 @@ from dbt.tests.adapter.grants.test_incremental_grants import BaseIncrementalGran
 from dbt.tests.adapter.grants.test_invalid_grants import BaseInvalidGrants
 from dbt.tests.adapter.grants.test_seed_grants import BaseSeedGrants
 from dbt.tests.adapter.grants.test_snapshot_grants import BaseSnapshotGrants
-from tests.functional.adapter.grant.fixture_snapshots import my_snapshot_sql,snapshot_schema_yml
 
 
 # need to export DBT_TEST_USER_1,DBT_TEST_USER_2,DBT_TEST_USER_3
 class TestModelGrantsTiDB(BaseModelGrants):
   pass
 
-
+@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
 class TestIncrementalGrantsTiDB(BaseIncrementalGrants):
   pass
 
@@ -20,14 +19,9 @@ class TestIncrementalGrantsTiDB(BaseIncrementalGrants):
 class TestSeedGrantsTiDB(BaseSeedGrants):
   pass
 
-
+@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
 class TestSnapshotGrantsTiDB(BaseSnapshotGrants):
-  @pytest.fixture(scope="class")
-  def snapshots(self):
-    return {
-      "my_snapshot.sql": my_snapshot_sql,
-      "schema.yml": self.interpolate_name_overrides(snapshot_schema_yml),
-    }
+  pass
 
 
 class TestInvalidGrantsTiDB(BaseInvalidGrants):
