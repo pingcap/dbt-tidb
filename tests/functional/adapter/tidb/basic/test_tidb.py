@@ -10,9 +10,6 @@ from dbt.tests.adapter.basic.test_generic_tests import BaseGenericTests
 from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCols
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
 from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
-from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
-from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenerate
-from dbt.tests.adapter.basic.expected_catalog import no_stats, base_expected_catalog
 from dbt.tests.util import run_dbt, check_relations_equal
 from dbt.tests.adapter.incremental.test_incremental_unique_id import BaseIncrementalUniqueKey
 
@@ -40,7 +37,6 @@ class TestSnapshotTimestampMyAdapter(BaseSnapshotTimestamp):
   pass
 
 
-
 class TestSingularTestsEphemeral(BaseSingularTestsEphemeral):
   pass
 
@@ -59,24 +55,6 @@ class TestBaseAdapterMethod(BaseAdapterMethod):
     assert len(result) == 3
     check_relations_equal(project.adapter, equal_tables)
 
-
-class TestValidateConnection(BaseValidateConnection):
-  pass
-
-
-class TestDocsGenerate(BaseDocsGenerate):
-  @pytest.fixture(scope="class")
-  def expected_catalog(self, project):
-    return base_expected_catalog(
-      project,
-      role=None,
-      id_type="int(11)",
-      text_type="text",
-      time_type="timestamp",
-      view_type="view",
-      table_type="table",
-      model_stats=no_stats(),
-    )
 
 class TestIncrementalUniqueKey(BaseIncrementalUniqueKey):
   pass

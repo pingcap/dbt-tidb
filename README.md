@@ -47,8 +47,6 @@ $ pip install dbt-tidb
 |       ✅        |       ✅       |        ✅        |      Custom data tests      |
 |       ✅        |       ✅       |        ✅        |        Docs generate        |
 |       ❌        |       ❌       |        ✅        |          Snapshots          |
-|       ✅        |       ✅       |        ✅        |      Connection retry       |
-|       ✅        |       ✅       |        ✅        |            Grant            |
 
 Note: 
 

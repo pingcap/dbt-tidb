@@ -1,5 +1,0 @@
-CREATE USER 'user1'@'%' IDENTIFIED BY '';
-
-CREATE USER 'user2'@'%' IDENTIFIED BY '';
-
-CREATE USER 'user3'@'%' IDENTIFIED BY '';
