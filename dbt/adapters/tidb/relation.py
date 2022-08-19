@@ -22,11 +22,11 @@ class TiDBIncludePolicy(Policy):
 class TiDBRelation(BaseRelation):
     quote_policy: TiDBQuotePolicy = TiDBQuotePolicy()
     include_policy: TiDBIncludePolicy = TiDBIncludePolicy()
-    quote_character: str = '`'
+    quote_character: str = "`"
 
     def __post_init__(self):
         if self.database != self.schema and self.database:
-            raise RuntimeException(f'Cannot set database {self.database} in tidb!')
+            raise RuntimeException(f"Cannot set database {self.database} in tidb!")
 
     def render(self):
         if self.include_policy.database and self.include_policy.schema:
