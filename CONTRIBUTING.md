@@ -23,9 +23,9 @@ We love to accept any kinds of contributions, such as:
 
 ## How to formate your code
 
-tidb-dbt use black to fmt Python. To fmt your code, you need to:
+dbt-tidb use black to fmt Python. To fmt your code, you need to:
 
-first, install black
+First, install black
 ```
 pip3 install black
 ```
