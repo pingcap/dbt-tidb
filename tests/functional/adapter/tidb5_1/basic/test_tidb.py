@@ -4,7 +4,9 @@ import pytest
 
 from dbt.tests.adapter.basic.test_base import BaseSimpleMaterializations
 from dbt.tests.adapter.basic.test_singular_tests import BaseSingularTests
-from dbt.tests.adapter.basic.test_singular_tests_ephemeral import BaseSingularTestsEphemeral
+from dbt.tests.adapter.basic.test_singular_tests_ephemeral import (
+    BaseSingularTestsEphemeral,
+)
 from dbt.tests.adapter.basic.test_empty import BaseEmpty
 from dbt.tests.adapter.basic.test_ephemeral import BaseEphemeral
 from dbt.tests.adapter.basic.test_incremental import BaseIncremental
@@ -13,52 +15,65 @@ from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCo
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
 from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
 from dbt.tests.util import run_dbt, check_relations_equal
-from dbt.tests.adapter.incremental.test_incremental_unique_id import BaseIncrementalUniqueKey
+from dbt.tests.adapter.incremental.test_incremental_unique_id import (
+    BaseIncrementalUniqueKey,
+)
 
 
 class TestEmptyMyAdapter(BaseEmpty):
-  pass
+    pass
 
 
 class TestSimpleMaterializationsMyAdapter(BaseSimpleMaterializations):
-  pass
+    pass
 
 
 class TestEphemeralMyAdapter(BaseEphemeral):
-  pass
+    pass
 
-@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
+
+@pytest.mark.skip(
+    reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view."
+)
 class TestIncrementalMyAdapter(BaseIncremental):
-  pass
+    pass
 
-@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
+
+@pytest.mark.skip(
+    reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view."
+)
 class TestSnapshotCheckColsMyAdapter(BaseSnapshotCheckCols):
-  pass
+    pass
 
-@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
+
+@pytest.mark.skip(
+    reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view."
+)
 class TestSnapshotTimestampMyAdapter(BaseSnapshotTimestamp):
-  pass
+    pass
 
 
 class TestSingularTestsEphemeral(BaseSingularTestsEphemeral):
-  pass
+    pass
 
 
 class TestSingularTestsMyAdapter(BaseSingularTests):
-  pass
+    pass
 
 
 class TestGenericTestsMyAdapter(BaseGenericTests):
-  pass
+    pass
 
 
 class TestBaseAdapterMethod(BaseAdapterMethod):
-  def test_adapter_methods(self, project, equal_tables):
-    result = run_dbt()
-    assert len(result) == 3
-    check_relations_equal(project.adapter, equal_tables)
+    def test_adapter_methods(self, project, equal_tables):
+        result = run_dbt()
+        assert len(result) == 3
+        check_relations_equal(project.adapter, equal_tables)
 
 
-@pytest.mark.skip(reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view.")
+@pytest.mark.skip(
+    reason="TiDB 4.0 ~ 5.2 does not support creating a temporary table or view."
+)
 class TestIncrementalUniqueKey(BaseIncrementalUniqueKey):
-  pass
+    pass
