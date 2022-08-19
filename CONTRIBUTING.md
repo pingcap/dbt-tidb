@@ -21,4 +21,19 @@ We love to accept any kinds of contributions, such as:
 5. Open a pull request to upstream
 6. Request a review from the reviewers
 
+## How to formate your code
+
+dbt-tidb use black to fmt Python. To fmt your code, you need to:
+
+First, install black
+```
+pip3 install black
+```
+Then fmt
+```
+black .
+```
+
+You can also integrate with IntelliJ IDEA or other editors. See [here](https://black.readthedocs.io/en/stable/integrations/editors.html) for more details.
+
 

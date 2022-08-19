@@ -3,7 +3,7 @@ from typing import TypeVar, Optional, Dict, Any
 
 from dbt.adapters.base.column import Column
 
-Self = TypeVar('Self', bound='TiDBColumn')
+Self = TypeVar("Self", bound="TiDBColumn")
 
 
 @dataclass
@@ -18,7 +18,7 @@ class TiDBColumn(Column):
 
     @property
     def quoted(self) -> str:
-        return '`{}`'.format(self.column)
+        return "`{}`".format(self.column)
 
     def __repr__(self) -> str:
         return "<TiDBColumn {} ({})>".format(self.name, self.data_type)
