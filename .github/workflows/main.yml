@@ -7,7 +7,7 @@ on:
 
 jobs:
   tidb_nightly:
-    name: Python ${{ matrix.python-version }} | TiDB nightly | Ubuntu latest
+    name: Python ${{ matrix.python-version }} | TiDB nightly
     runs-on: ubuntu-latest
 
     strategy:
@@ -42,7 +42,7 @@ jobs:
           PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
   tidb_5_1:
-    name: Python ${{ matrix.python-version }} | TiDB 5.1 | Ubuntu latest
+    name: Python ${{ matrix.python-version }} | TiDB 5.1
     runs-on: ubuntu-latest
 
     strategy:
@@ -77,7 +77,7 @@ jobs:
           PYTHONPATH=. pytest tests/functional/adapter/tidb5_1
 
   tidb_4_0:
-    name: Python ${{ matrix.python-version }} | TiDB 4.0 | Ubuntu latest
+    name: Python ${{ matrix.python-version }} | TiDB 4.0
     runs-on: ubuntu-latest
 
     strategy:
