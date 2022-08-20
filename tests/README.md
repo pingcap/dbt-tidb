@@ -20,7 +20,7 @@ pip3 install .
 
 If you don't set environment variables, the default value will be used.
 ```bash
-export TIDB_TEST_HOST=tidb-server # default '127.0.0.1'
+export TIDB_TEST_HOST=tidb_server # default '127.0.0.1'
 export TIDB_TEST_USER=user_name # default 'root'
 export TIDB_TEST_PASSWORD=password # default ''
 export TIDB_TEST_PORT=port # default 4000

@@ -31,7 +31,7 @@
              from_relation=tmp_relation,
              to_relation=target_relation) %}
      {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
-     --  use get_delete_insert_merge_sql after support mutil sql
+     --  use get_delete_insert_merge_sql after support multi sql
      --  we will delete then insert now
      {% set build_sql = incremental_delete(target_relation, tmp_relation, unique_key, dest_columns) %}
       {% call statement("pre_main") %}

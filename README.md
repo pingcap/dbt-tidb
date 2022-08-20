@@ -72,7 +72,6 @@ your_profile_name:
       schema: database_name
       username: tidb_username
       password: tidb_password
-      retries: 2
 ```
 
 | Option           | Description                                           | Required? | Example                        |
@@ -83,7 +82,6 @@ your_profile_name:
 | schema           | Specify the schema (database) to build models into    | Required  | `analytics`                    |
 | username         | The username to use to connect to the server          | Required  | `dbt_admin`                    |
 | password         | The password to use for authenticating to the server  | Required  | `correct-horse-battery-staple` |
-| retries          | The retry times for connection to TiDB (1 in default) | Optional  | `2`                            |
 
 ## Database User Privileges
 
