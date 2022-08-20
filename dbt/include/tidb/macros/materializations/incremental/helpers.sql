@@ -35,7 +35,7 @@
 
 {%- endmacro %}
 
--- don't use it because dbt-tidb does not support mutil sql
+-- don't use it because dbt-tidb does not support multi sql
 {% macro tidb__get_delete_insert_merge_sql(target, source, unique_key, dest_columns) -%}
 
     {%- set dest_cols_csv = get_quoted_csv(dest_columns | map(attribute="name")) -%}
