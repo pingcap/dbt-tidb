@@ -2,7 +2,7 @@
 import os
 import sys
 
-if sys.version_info < (3, 8) or sys.version_info >= (3, 10):
+if sys.version_info < (3, 8) or sys.version_info > (3, 10):
     print("Error: dbt-tidb does not support this version of Python.")
     print("Please install Python 3.8 or higher but less than 3.10.")
     sys.exit(1)
@@ -53,9 +53,9 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     python_requires=">=3.8,<=3.10",
 )
