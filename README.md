@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="https://github.com/pingcap/tidb/blob/21847fe58b51807696debf0f7650af948f2aa3e2/docs/logo_with_text.png" alt="TiDB logo" />
+  <img src="https://raw.githubusercontent.com/dbt-labs/dbt/ec7dee39f793aa4f7dd3dae37282cc87664813e4/etc/dbt-logo-full.svg" alt="dbt logo" width="250"/>
+</p>
+
 # dbt-tidb
 
 ![PyPI](https://img.shields.io/pypi/v/dbt-tidb)
