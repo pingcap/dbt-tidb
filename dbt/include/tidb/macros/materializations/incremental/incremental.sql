@@ -30,11 +30,14 @@
       {% do adapter.expand_target_column_types(
              from_relation=tmp_relation,
              to_relation=target_relation) %}
-      {% set build_sql = incremental_delete(tmp_relation, target_relation, unique_key=unique_key, statement_name="pre_main") %}
+     {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
+     --  use get_delete_insert_merge_sql after support multi sql
+     --  we will delete then insert now
+     {% set build_sql = incremental_delete(target_relation, tmp_relation, unique_key, dest_columns) %}
       {% call statement("pre_main") %}
           {{ build_sql }}
       {% endcall %}
-      {% set build_sql = incremental_insert(tmp_relation, target_relation, unique_key=unique_key) %}
+     {% set build_sql = incremental_insert(target_relation, tmp_relation, unique_key, dest_columns) %}
   {% endif %}
 
   {% call statement("main") %}

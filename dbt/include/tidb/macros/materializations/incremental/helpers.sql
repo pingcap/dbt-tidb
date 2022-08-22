@@ -1,23 +1,70 @@
+-- need to support unique_key is sequence
+{% macro incremental_delete(target, source, unique_key, dest_columns) %}
 
-{% macro incremental_delete(tmp_relation, target_relation, unique_key=none, statement_name="pre_main") %}
-    {%- if unique_key is not none -%}
-    delete
-    from {{ target_relation }}
-    where ({{ unique_key }}) in (
-        select ({{ unique_key }})
-        from {{ tmp_relation }}
-    )
-    {%- endif %}
+    {% if unique_key %}
+        {% if unique_key is sequence and unique_key is not string %}
+            delete from {{ target }}
+            where (
+            {% for key in unique_key %}
+                {{ key }} in (select {{ key }} from {{ source }})
+                {{ "and " if not loop.last }}
+            {% endfor %}
+            );
+        {% else %}
+            delete from {{ target }}
+            where (
+            {{ unique_key }}) in (
+            select ({{ unique_key }})
+            from {{ source }}
+            );
+
+        {% endif %}
+    {% endif %}
 
 {%- endmacro %}
 
-{% macro incremental_insert(tmp_relation, target_relation, unique_key=none, statement_name="main") %}
-    {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
-    {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
+{% macro incremental_insert(target, source, unique_key, dest_columns) %}
 
-    insert into {{ target_relation }} ({{ dest_cols_csv }})
+    {%- set dest_cols_csv = get_quoted_csv(dest_columns | map(attribute="name")) -%}
+
+    insert into {{ target }} ({{ dest_cols_csv }})
     (
        select {{ dest_cols_csv }}
-       from {{ tmp_relation }}
+       from {{ source }}
     )
+
 {%- endmacro %}
+
+-- don't use it because dbt-tidb does not support multi sql
+{% macro tidb__get_delete_insert_merge_sql(target, source, unique_key, dest_columns) -%}
+
+    {%- set dest_cols_csv = get_quoted_csv(dest_columns | map(attribute="name")) -%}
+
+    {% if unique_key %}
+        {% if unique_key is sequence and unique_key is not string %}
+            delete from {{ target }}
+            where (
+                {% for key in unique_key %}
+                    {{ key }} in (select {{ key }} from {{ source }})
+                    {{ "and " if not loop.last }}
+                {% endfor %}
+            );
+        {% else %}
+            delete from {{ target }}
+            where (
+                {{ unique_key }}) in (
+                select ({{ unique_key }})
+                from {{ source }}
+            );
+
+        {% endif %}
+    {% endif %}
+
+    insert into {{ target }} ({{ dest_cols_csv }})
+    (
+       select {{ dest_cols_csv }}
+       from {{ source }}
+    )
+
+{%- endmacro %}
+

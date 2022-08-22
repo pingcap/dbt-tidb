@@ -17,9 +17,9 @@ logger = AdapterLogger("tidb")
 @dataclass(init=False)
 class TiDBCredentials(Credentials):
     server: str
+    schema: str
     port: Optional[int] = None
     database: Optional[str] = None
-    schema: str
     username: Optional[str] = None
     password: Optional[str] = None
     charset: Optional[str] = None
@@ -82,6 +82,7 @@ class TiDBConnectionManager(SQLConnectionManager):
         kwargs["host"] = credentials.server
         kwargs["user"] = credentials.username
         kwargs["passwd"] = credentials.password
+        kwargs["buffered"] = True
 
         if credentials.port:
             kwargs["port"] = credentials.port

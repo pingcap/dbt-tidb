@@ -2,10 +2,9 @@
 import os
 import sys
 
-if sys.version_info < (3, 7) or sys.version_info >= (3, 10):
+if sys.version_info < (3, 8) or sys.version_info >= (3, 11):
     print("Error: dbt-tidb does not support this version of Python.")
-    print("Please install Python 3.7 or higher but less than 3.10.")
-    sys.exit(1)
+    print("Please install Python 3.8 or higher but less than 3.11.")
 
 # require version of setuptools that supports find_namespace_packages
 from setuptools import setup
@@ -27,8 +26,8 @@ with open(os.path.join(this_directory, "README.md")) as f:
     long_description = f.read()
 
 package_name = "dbt-tidb"
-package_version = "1.0.0"
-dbt_core_version = "1.0.1"
+package_version = "1.1.0"
+dbt_core_version = "1.1.0"
 description = """The TiDB adapter plugin for dbt"""
 
 setup(
@@ -57,5 +56,5 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    python_requires=">=3.7,<3.10",
+    python_requires=">=3.8,<=3.10",
 )

@@ -6,46 +6,126 @@ on:
     branches: main
 
 jobs:
-  build:
-    name: Python 3.8 | TiDB nightly | Ubuntu latest
+  tidb_nightly:
+    name: Python ${{ matrix.python-version }} | TiDB nightly
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
 
     services:
       tidb_nightly:
         image: pingcap/tidb:nightly
         ports:
           - 4000:4000
-      tidb_5.1:
-        image: pingcap/tidb:v5.1.0
-        ports:
-          - 4001:4000
-      tidb_4.0:
-        image: pingcap/tidb:v4.0.0
-        ports:
-          - 4002:4000
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install requirements
-      run: |
-        pip install -r requirements_dev.txt
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
 
-    - name: Run tests tidb_nightly
-      run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb.dbtspec
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
-    - name: Run tests tidb_v5.0.1 up
-      run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v5.1-v5.2.dbtspec
+  tidb_5_3:
+    name: Python ${{ matrix.python-version }} | TiDB 5.3
+    runs-on: ubuntu-latest
 
-    - name: Run tests tidb_v4.0.0 up
-      run: |
-        PYTHONPATH="${PYTHONPATH}:dbt" pytest test/integration/tidb_v4.0-v5.0.dbtspec
-        
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
+      tidb_nightly:
+        image: pingcap/tidb:v5.3.2
+        ports:
+          - 4000:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/tidb  
+
+  tidb_5_1:
+    name: Python ${{ matrix.python-version }} | TiDB 5.1
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
+      tidb_5.1:
+        image: pingcap/tidb:v5.1.4
+        ports:
+          - 4000:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/tidb5_1
+
+  tidb_4_0:
+    name: Python ${{ matrix.python-version }} | TiDB 4.0
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
+      tidb_4.0:
+        image: pingcap/tidb:v4.0.16
+        ports:
+          - 4000:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=. pytest tests/functional/adapter/tidb4_0
