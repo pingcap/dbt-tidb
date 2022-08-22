@@ -35,17 +35,17 @@ $ pip install dbt-tidb
 ```
 ## Supported features
 
-|    TiDB 4.X    | TiDB 5.0 ~ 5.2 |   TiDB >= 5.3    |           Feature           |
-|:--------------:|:--------------:|:----------------:|:---------------------------:|
-|       ✅        |       ✅       |        ✅        |    Table materialization    |
-|       ✅        |       ✅       |        ✅        |    View materialization     |
-|       ❌        |       ❌       |        ✅        | Incremental materialization |
-|       ❌        |       ✅       |        ✅        |  Ephemeral materialization  |
-|       ✅        |       ✅       |        ✅        |            Seeds            |
-|       ✅        |       ✅       |        ✅        |           Sources           |
-|       ✅        |       ✅       |        ✅        |      Custom data tests      |
-|       ✅        |       ✅       |        ✅        |        Docs generate        |
-|       ❌        |       ❌       |        ✅        |          Snapshots          |
+| TiDB 4.X | TiDB 5.0 ~ 5.2 | TiDB >= 5.3 |           Feature           |
+|:--------:|:--------------:|:-----------:|:---------------------------:|
+|    ✅     |       ✅        |      ✅      |    Table materialization    |
+|    ✅     |       ✅        |      ✅      |    View materialization     |
+|    ❌     |       ❌        |      ✅      | Incremental materialization |
+|    ❌     |       ✅        |      ✅      |  Ephemeral materialization  |
+|    ✅     |       ✅        |      ✅      |            Seeds            |
+|    ✅     |       ✅        |      ✅      |           Sources           |
+|    ✅     |       ✅        |      ✅      |      Custom data tests      |
+|    ✅     |       ✅        |      ✅      |        Docs generate        |
+|    ❌     |       ❌        |      ✅      |          Snapshots          |
 
 Note: 
 
@@ -102,7 +102,7 @@ You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-manag
 
 ## Running Tests
 
-See [test/README.md](test/README.md) for details on running the integration tests.
+See [tests/README.md](tests/README.md) for details on running the integration tests.
 
 ## Example
 
