@@ -1,6 +1,6 @@
-dbt-core~=1.1.0
+dbt-core~=1.2.0
 mysql-connector-python>=8.0.0,<8.1
 pytest~=7.0
 markupsafe==2.0.1
-dbt-tests-adapter~=1.1.0
+dbt-tests-adapter~=1.2.0
 pytest-dotenv

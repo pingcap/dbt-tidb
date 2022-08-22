@@ -55,7 +55,22 @@ If you specify a package, all Python files under the package will be tested. Don
 ```
 # basic
 PYTHONPATH=. pytest tests/functional/adapter/tidb/basic
-``
+# utils
+PYTHONPATH=. pytest tests/functional/adapter/tidb/utils
+```
+
+## Test grant
+
+When you test grant, you need to [create three users](https://docs.pingcap.com/tidb/stable/basic-sql-operations#create-authorize-and-delete-a-user) in TiDB and set environment variables like:
+```
+export DBT_TEST_USER_1=user1
+export DBT_TEST_USER_2=user2
+export DBT_TEST_USER_3=user3
+```
+Then test grant:
+```
+PYTHONPATH=. pytest tests/functional/adapter/tidb/grant
+```
 
 ## Test other versions of TiDB
 

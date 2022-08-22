@@ -7,6 +7,9 @@
   {% set existing_relation = load_relation(this) %}
   {% set tmp_relation = make_temp_relation(this) %}
 
+   -- grab current tables grants config for comparision later on
+  {% set grant_config = config.get('grants') %}
+
   {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
   -- `BEGIN` happens here:
@@ -44,6 +47,8 @@
       {{ build_sql }}
   {% endcall %}
 
+  {% set should_revoke = should_revoke(existing_relation, full_refresh_mode) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
   {% do persist_docs(target_relation, model) %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}

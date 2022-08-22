@@ -14,6 +14,7 @@ Thanks to them for their excellent work.
 ## Table of Contents
  * [Installation](#installation)
  * [Supported features](#supported-features)
+ * [Supported functions](#supported-functions)
  * [Profile Configuration](#profile-configuration)
  * [Database User Privileges](#database-user-privileges)
  * [Running Tests](#running-tests)
@@ -46,6 +47,8 @@ $ pip install dbt-tidb
 |       ✅        |       ✅       |        ✅        |      Custom data tests      |
 |       ✅        |       ✅       |        ✅        |        Docs generate        |
 |       ❌        |       ❌       |        ✅        |          Snapshots          |
+|       ✅        |       ✅       |        ✅        |      Connection retry       |
+|       ✅        |       ✅       |        ✅        |            Grant            |
 
 Note: 
 
@@ -54,6 +57,31 @@ Note:
 * TiDB 4.0 ~ 5.2 does not support creating a [temporary table or view](https://docs.pingcap.com/tidb/v5.2/sql-statement-create-table#:~:text=sec\)-,MySQL%20compatibility,-TiDB%20does%20not).
 * TiDB 4.X does not support using SQL func in `CREATE VIEW`, avoid it in your SQL code. 
   You can find more detail [here](https://github.com/pingcap/tidb/pull/27252).
+
+## Supported functions
+
+cross-db macros are moved from dbt-utils into dbt-core, so you can use the following functions directly, see [dbt-util](https://github.com/dbt-labs/dbt-utils) on how to use them.
+- bool_or
+- cast_bool_to_text
+- dateadd
+- datediff
+- date_trunc
+- hash
+- safe_cast
+- split_part
+- last_day
+- cast_bool_to_text
+- concat
+- escape_single_quotes
+- except
+- intersect
+- length
+- position
+- replace
+- right
+- listagg (not support yet)
+
+> pay attention that datediff is a little different from dbt-util that it will round down rather than round up.
 
 ## Profile Configuration
 
@@ -72,6 +100,7 @@ your_profile_name:
       schema: database_name
       username: tidb_username
       password: tidb_password
+      retries: 2
 ```
 
 | Option           | Description                                           | Required? | Example                        |
@@ -82,6 +111,7 @@ your_profile_name:
 | schema           | Specify the schema (database) to build models into    | Required  | `analytics`                    |
 | username         | The username to use to connect to the server          | Required  | `dbt_admin`                    |
 | password         | The password to use for authenticating to the server  | Required  | `correct-horse-battery-staple` |
+| retries          | The retry times for connection to TiDB (1 in default) | Optional  | `2`                            |
 
 ## Database User Privileges
 
@@ -102,7 +132,7 @@ You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-manag
 
 ## Running Tests
 
-See [test/README.md](test/README.md) for details on running the integration tests.
+See [tests/README.md](tests/README.md) for details on running the integration tests.
 
 ## Example
 

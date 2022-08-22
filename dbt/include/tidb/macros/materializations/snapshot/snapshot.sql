@@ -11,6 +11,8 @@
 
   {%- set strategy_name = config.get('strategy') -%}
   {%- set unique_key = config.get('unique_key') %}
+ -- grab current tables grants config for comparision later on
+  {%- set grant_config = config.get('grants') -%}
 
   {% if not adapter.check_schema_exists(model.database, model.schema) %}
     {% do create_schema(model.database, model.schema) %}
@@ -97,6 +99,9 @@
       {% endcall %}
 
   {% endif %}
+
+  {% set should_revoke = should_revoke(target_relation_exists, full_refresh_mode=False) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
 
   {% do persist_docs(target_relation, model) %}
 

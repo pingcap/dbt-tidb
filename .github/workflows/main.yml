@@ -35,6 +35,10 @@ jobs:
 
       - name: Run tests
         run: |
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
   tidb_5_3:
@@ -66,6 +70,10 @@ jobs:
 
       - name: Run tests
         run: |
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
   tidb_5_1:
@@ -97,6 +105,10 @@ jobs:
 
       - name: Run tests
         run: |
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb5_1/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb5_1
 
   tidb_4_0:
@@ -128,4 +140,8 @@ jobs:
 
       - name: Run tests
         run: |
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb4_0/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb4_0

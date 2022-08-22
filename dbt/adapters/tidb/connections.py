@@ -23,6 +23,7 @@ class TiDBCredentials(Credentials):
     username: Optional[str] = None
     password: Optional[str] = None
     charset: Optional[str] = None
+    retries: int = 1
 
     _ALIASES = {
         "UID": "username",
@@ -87,35 +88,20 @@ class TiDBConnectionManager(SQLConnectionManager):
         if credentials.port:
             kwargs["port"] = credentials.port
 
-        try:
-            connection.handle = mysql.connector.connect(**kwargs)
-            connection.state = "open"
-        except mysql.connector.Error:
+        def connect():
+            handle = mysql.connector.connect(**kwargs)
+            return handle
 
-            try:
-                logger.debug(
-                    "Failed connection without supplying the `database`. "
-                    "Trying again with `database` included."
-                )
+        # we just retry for any error now
+        retryable_exceptions = [mysql.connector.Error]
 
-                # Try again with the database included
-                kwargs["database"] = credentials.schema
-
-                connection.handle = mysql.connector.connect(**kwargs)
-                connection.state = "open"
-            except mysql.connector.Error as e:
-
-                logger.debug(
-                    "Got an error when attempting to open a tidb "
-                    "connection: '{}'".format(e)
-                )
-
-                connection.handle = None
-                connection.state = "fail"
-
-                raise dbt.exceptions.FailedToConnectException(str(e))
-
-        return connection
+        return cls.retry_connection(
+            connection,
+            connect=connect,
+            logger=logger,
+            retry_limit=credentials.retries,
+            retryable_exceptions=retryable_exceptions,
+        )
 
     @classmethod
     def get_credentials(cls, credentials):
