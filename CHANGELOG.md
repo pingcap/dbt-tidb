@@ -1,9 +1,6 @@
 # dbt-tidb changelog
 
 ## [1.2.0]2022-8-22
-## Enhancement
-- Update README.md (https://github.com/pingcap/dbt-tidb/pull/6)
-
 ## Features
 - Support dbt-core v1.2.0 (https://github.com/pingcap/dbt-tidb/pull/6)
 - Lift + shift for cross-db macros (https://github.com/pingcap/dbt-tidb/pull/6)
