@@ -102,7 +102,7 @@ You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-manag
 
 ## Running Tests
 
-See [test/README.md](test/README.md) for details on running the integration tests.
+See [tests/README.md](tests/README.md) for details on running the integration tests.
 
 ## Example
 
