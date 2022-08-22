@@ -1,5 +1,13 @@
 # dbt-tidb changelog
 
+## [1.0.1]2022-8-22
+## Fixes
+- Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
+- Delete PRI, UNI constraint in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/10)
+
+## Enhancement
+- Use black to fmt Python (https://github.com/pingcap/dbt-tidb/pull/12)
+
 ## [1.1.0]2022-8-22
 ## Fixes
 - Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
