@@ -4,8 +4,8 @@
 # change 2019-12-31 00:00:00,2019-12-27 00:00:00,week,-1 to 2019-12-31 00:00:00,2019-12-24 00:00:00,week,-1
 
 # change models__test_datediff_sql:
-  # source:  create view `test_view` as (with data as ( select * from `test`) select * from data union all select 1 as id );
-  # target:  create view `test_view` as (with data as ( select * from `test` union all select 1 as id) select * from data );
+# source:  create view `test_view` as (with data as ( select * from `test`) select * from data union all select 1 as id );
+# target:  create view `test_view` as (with data as ( select * from `test` union all select 1 as id) select * from data );
 seeds__data_datediff_csv = """first_date,second_date,datepart,result
 2018-01-01 01:00:00,2018-01-02 01:00:00,day,1
 2018-01-01 01:00:00,2018-02-01 01:00:00,month,1

@@ -3,8 +3,8 @@ import os
 import sys
 
 if sys.version_info < (3, 8) or sys.version_info >= (3, 10):
-    print('Error: dbt-tidb does not support this version of Python.')
-    print('Please install Python 3.8 or higher but less than 3.10.')
+    print("Error: dbt-tidb does not support this version of Python.")
+    print("Please install Python 3.8 or higher but less than 3.10.")
     sys.exit(1)
 
 # require version of setuptools that supports find_namespace_packages
