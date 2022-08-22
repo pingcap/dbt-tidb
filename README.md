@@ -35,17 +35,17 @@ $ pip install dbt-tidb
 ```
 ## Supported features
 
-| TiDB 4.X | TiDB 5.0 ~ 5.2 | TiDB >= 5.3 |           Feature           |
-|:--------:|:--------------:|:-----------:|:---------------------------:|
-|    ✅     |       ✅        |      ✅      |    Table materialization    |
-|    ✅     |       ✅        |      ✅      |    View materialization     |
-|    ❌     |       ❌        |      ✅      | Incremental materialization |
-|    ❌     |       ✅        |      ✅      |  Ephemeral materialization  |
-|    ✅     |       ✅        |      ✅      |            Seeds            |
-|    ✅     |       ✅        |      ✅      |           Sources           |
-|    ✅     |       ✅        |      ✅      |      Custom data tests      |
-|    ✅     |       ✅        |      ✅      |        Docs generate        |
-|    ❌     |       ❌        |      ✅      |          Snapshots          |
+|    TiDB 4.X    | TiDB 5.0 ~ 5.2 |   TiDB >= 5.3    |           Feature           |
+|:--------------:|:--------------:|:----------------:|:---------------------------:|
+|       ✅        |       ✅       |        ✅        |    Table materialization    |
+|       ✅        |       ✅       |        ✅        |    View materialization     |
+|       ❌        |       ❌       |        ✅        | Incremental materialization |
+|       ❌        |       ✅       |        ✅        |  Ephemeral materialization  |
+|       ✅        |       ✅       |        ✅        |            Seeds            |
+|       ✅        |       ✅       |        ✅        |           Sources           |
+|       ✅        |       ✅       |        ✅        |      Custom data tests      |
+|       ✅        |       ✅       |        ✅        |        Docs generate        |
+|       ❌        |       ❌       |        ✅        |          Snapshots          |
 
 Note: 
 
