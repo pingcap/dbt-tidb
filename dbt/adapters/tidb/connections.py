@@ -39,10 +39,7 @@ class TiDBCredentials(Credentials):
 
     def __post_init__(self):
         # mysql classifies database and schema as the same thing
-        if (
-            self.database is not None and
-            self.database != self.schema
-        ):
+        if self.database is not None and self.database != self.schema:
             raise dbt.exceptions.RuntimeException(
                 f"    schema: {self.schema} \n"
                 f"    database: {self.database} \n"
@@ -76,8 +73,8 @@ class TiDBConnectionManager(SQLConnectionManager):
 
     @classmethod
     def open(cls, connection):
-        if connection.state == 'open':
-            logger.debug('Connection is already open, skipping open.')
+        if connection.state == "open":
+            logger.debug("Connection is already open, skipping open.")
             return connection
 
         credentials = cls.get_credentials(connection.credentials)
@@ -121,7 +118,7 @@ class TiDBConnectionManager(SQLConnectionManager):
             yield
 
         except mysql.connector.DatabaseError as e:
-            logger.debug('TiDB error: {}'.format(str(e)))
+            logger.debug("TiDB error: {}".format(str(e)))
 
             try:
                 self.rollback_if_open()
@@ -154,7 +151,5 @@ class TiDBConnectionManager(SQLConnectionManager):
         # There's no real way to get the status from the mysql-connector-python driver.
         # So just return the default value.
         return AdapterResponse(
-            _message="{} {}".format(code, num_rows),
-            rows_affected=num_rows,
-            code=code
+            _message="{} {}".format(code, num_rows), rows_affected=num_rows, code=code
         )
