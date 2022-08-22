@@ -1,5 +1,20 @@
 # dbt-tidb changelog
 
+## [1.2.0]2022-8-22
+## Features
+- Support dbt-core v1.2.0 (https://github.com/pingcap/dbt-tidb/pull/6)
+- Lift + shift for cross-db macros (https://github.com/pingcap/dbt-tidb/pull/6)
+- Support connection retry (https://github.com/pingcap/dbt-tidb/pull/6)
+- Support grant (https://github.com/pingcap/dbt-tidb/pull/6)
+
+## [1.0.1]2022-8-22
+## Fixes
+- Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
+- Delete PRI, UNI constraint in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/10)
+
+## Enhancement
+- Use black to fmt Python (https://github.com/pingcap/dbt-tidb/pull/12)
+
 ## [1.1.0]2022-8-22
 ## Fixes
 - Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
