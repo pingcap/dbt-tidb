@@ -1,6 +1,6 @@
 # dbt-tidb changelog
 
-## [1.1.1]2022-11-9
+## [1.2.1]2022-11-9
 ## Fixes
 - Fix version inconsistencies (https://github.com/pingcap/dbt-tidb/pull/24)
 
