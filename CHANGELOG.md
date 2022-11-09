@@ -1,5 +1,13 @@
 # dbt-tidb changelog
 
+## [1.2.1]2022-11-9
+## Fixes
+- Fix version inconsistencies (https://github.com/pingcap/dbt-tidb/pull/24)
+
+## [1.1.1]2022-11-9
+## Fixes
+- Fix version inconsistencies (https://github.com/pingcap/dbt-tidb/pull/25)
+
 ## [1.2.0]2022-8-22
 ## Features
 - Support dbt-core v1.2.0 (https://github.com/pingcap/dbt-tidb/pull/6)
