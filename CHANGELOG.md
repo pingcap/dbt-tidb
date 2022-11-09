@@ -1,5 +1,9 @@
 # dbt-tidb changelog
 
+## [1.1.1]2022-11-9
+## Fixes
+- Fix version inconsistencies (https://github.com/pingcap/dbt-tidb/pull/25)
+
 ## [1.1.0]2022-8-22
 ## Fixes
 - Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
