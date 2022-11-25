@@ -49,6 +49,16 @@ You can also install tidb with [TiUP playground](https://docs.pingcap.com/tidb/s
 tiup playground ${version}
 ```
 
+## Set TiDB variables
+TiDB use `SYSTEM` as the default value of `time_zone`. For more information, see [TiDB Time Zone Support](https://docs.pingcap.com/tidb/stable/configure-time-zone). 
+
+To pass the `CurrentTimestamp` tests, you should set `time_zone` to `UTC` first.
+
+```sql
+mysql -u <user_name> -h <host> -P <port> -p
+mysql> set @@global.time_zone='UTC';
+```
+
 ## Use pytest to test
 
 If you specify a package, all Python files under the package will be tested. Don't forget to configure PYTHONPATH:
@@ -57,6 +67,12 @@ If you specify a package, all Python files under the package will be tested. Don
 PYTHONPATH=. pytest tests/functional/adapter/tidb/basic
 # utils
 PYTHONPATH=. pytest tests/functional/adapter/tidb/utils
+# concurrentcy
+PYTHONPATH=. pytest tests/functional/adapter/tidb/concurrency
+# ephemeral
+PYTHONPATH=. pytest tests/functional/adapter/tidb/ephemeral
+# incremental
+PYTHONPATH=. pytest tests/functional/adapter/tidb/incremental
 ```
 
 ## Test grant

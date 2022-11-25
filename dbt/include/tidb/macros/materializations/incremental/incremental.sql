@@ -1,4 +1,3 @@
-
 {% materialization incremental, adapter='tidb' %}
 
   {% set unique_key = config.get('unique_key') %}
@@ -34,13 +33,12 @@
              from_relation=tmp_relation,
              to_relation=target_relation) %}
      {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
-     --  use get_delete_insert_merge_sql after support multi sql
-     --  we will delete then insert now
-     {% set build_sql = incremental_delete(target_relation, tmp_relation, unique_key, dest_columns) %}
-      {% call statement("pre_main") %}
-          {{ build_sql }}
-      {% endcall %}
-     {% set build_sql = incremental_insert(target_relation, tmp_relation, unique_key, dest_columns) %}
+     {#-- Get the incremental_strategy, the macro to use for the strategy, and build the sql --#}
+     {% set incremental_strategy = config.get('incremental_strategy') or 'default' %}
+     {% set incremental_predicates = config.get('incremental_predicates', none) %}
+     {% set strategy_sql_macro_func = adapter.get_incremental_strategy_macro(context, incremental_strategy) %}
+     {% set strategy_arg_dict = ({'target_relation': target_relation, 'temp_relation': tmp_relation, 'unique_key': unique_key, 'dest_columns': dest_columns, 'predicates': incremental_predicates }) %}
+      {% set build_sql = get_incremental_delete_insert_sql(strategy_arg_dict) %}
   {% endif %}
 
   {% call statement("main") %}
