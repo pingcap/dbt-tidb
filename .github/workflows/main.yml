@@ -36,11 +36,46 @@ jobs:
       - name: Run tests
         run: |
           mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
-          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/utils/set_timezone.sql
           export DBT_TEST_USER_1=user1
           export DBT_TEST_USER_2=user2
           export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb  
+
+  tidb_6_1:
+    name: Python ${{ matrix.python-version }} | TiDB 6.1
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.8', '3.9', '3.10' ]
+
+    services:
+      tidb_nightly:
+        image: pingcap/tidb:v6.1.0
+        ports:
+          - 4000:4000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements_dev.txt
+
+      - name: Run tests
+        run: |
+          mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
+          export DBT_TEST_USER_1=user1
+          export DBT_TEST_USER_2=user2
+          export DBT_TEST_USER_3=user3
+          PYTHONPATH=. pytest tests/functional/adapter/tidb  
+
 
   tidb_5_3:
     name: Python ${{ matrix.python-version }} | TiDB 5.3
