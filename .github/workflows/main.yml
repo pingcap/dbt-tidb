@@ -51,7 +51,7 @@ jobs:
 
     services:
       tidb_nightly:
-        image: pingcap/tidb:v6.1.0
+        image: pingcap/tidb:v6.1.2
         ports:
           - 4000:4000
 
