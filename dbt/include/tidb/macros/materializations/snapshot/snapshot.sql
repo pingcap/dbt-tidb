@@ -1,9 +1,4 @@
 
-{% macro tidb__snapshot_string_as_time(timestamp) -%}
-    {%- set result = "str_to_date('" ~ timestamp ~ "', '%Y-%m-%d %T')" -%}
-    {{ return(result) }}
-{%- endmacro %}
-
 {% materialization snapshot, adapter='tidb' %}
   {%- set config = model['config'] -%}
 

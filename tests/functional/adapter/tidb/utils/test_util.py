@@ -1,4 +1,5 @@
 import pytest
+
 from dbt.tests.adapter.utils.test_any_value import BaseAnyValue
 from dbt.tests.adapter.utils.test_bool_or import BaseBoolOr
 from dbt.tests.adapter.utils.test_cast_bool_to_text import BaseCastBoolToText
@@ -21,9 +22,9 @@ from dbt.tests.adapter.utils.test_safe_cast import BaseSafeCast
 from dbt.tests.adapter.utils.test_split_part import BaseSplitPart
 from dbt.tests.adapter.utils.test_string_literal import BaseStringLiteral
 from dbt.tests.adapter.utils.test_listagg import BaseListagg
-from tests.functional.adapter.tidb.utils.fixture_bool_or import (
-    models__test_bool_or_sql,
-    models__test_bool_or_yml,
+from dbt.tests.adapter.utils.test_current_timestamp import (
+    BaseCurrentTimestamp,
+    BaseCurrentTimestampNaive,
 )
 from tests.functional.adapter.tidb.utils.fixture_dateadd import (
     models__test_dateadd_yml,
@@ -45,14 +46,7 @@ class TestAnyValue(BaseAnyValue):
 
 
 class TestBoolOr(BaseBoolOr):
-    @pytest.fixture(scope="class")
-    def models(self):
-        return {
-            "test_bool_or.yml": models__test_bool_or_yml,
-            "test_bool_or.sql": self.interpolate_macro_namespace(
-                models__test_bool_or_sql, "bool_or"
-            ),
-        }
+    pass
 
 
 class TestCastBoolToText(BaseCastBoolToText):
@@ -153,4 +147,12 @@ class TestSplitPart(BaseSplitPart):
 
 
 class TestStringLiteral(BaseStringLiteral):
+    pass
+
+
+class TestCurrentTimestampTiDB(BaseCurrentTimestamp):
+    pass
+
+
+class TestCurrentTimestampNaiveTiDB(BaseCurrentTimestampNaive):
     pass

@@ -78,10 +78,6 @@
 
 {% endmacro %}
 
-{% macro tidb__current_timestamp() -%}
-  current_timestamp()
-{%- endmacro %}
-
 {% macro tidb__rename_relation(from_relation, to_relation) -%}
   {#
     tidb rename fails when the relation already exists, so a 2-step process is needed:

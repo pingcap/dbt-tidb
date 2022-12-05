@@ -15,10 +15,9 @@ from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
 from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
 from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenerate
 from dbt.tests.adapter.basic.expected_catalog import no_stats, base_expected_catalog
+from dbt.tests.adapter.basic.test_incremental import BaseIncrementalNotSchemaChange
+
 from dbt.tests.util import run_dbt, check_relations_equal
-from dbt.tests.adapter.incremental.test_incremental_unique_id import (
-    BaseIncrementalUniqueKey,
-)
 
 
 class TestEmptyMyAdapter(BaseEmpty):
@@ -83,5 +82,5 @@ class TestDocsGenerate(BaseDocsGenerate):
         )
 
 
-class TestIncrementalUniqueKey(BaseIncrementalUniqueKey):
+class TestIncrementalNotSchemaChange(BaseIncrementalNotSchemaChange):
     pass

@@ -11,7 +11,7 @@ from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.tidb import TiDBConnectionManager
 from dbt.adapters.tidb import TiDBRelation
 from dbt.adapters.tidb import TiDBColumn
-from dbt.adapters.base import BaseRelation
+from dbt.adapters.base import BaseRelation, available
 from dbt.clients.agate_helper import DEFAULT_TYPE_TESTER
 from dbt.events import AdapterLogger
 from dbt.utils import executor
@@ -34,6 +34,11 @@ class TiDBAdapter(SQLAdapter):
     @classmethod
     def convert_datetime_type(cls, agate_table: agate.Table, col_idx: int) -> str:
         return "timestamp"
+
+    @classmethod
+    def convert_number_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        decimals = agate_table.aggregate(agate.MaxPrecision(col_idx))  # type: ignore[attr-defined]
+        return "float" if decimals else "integer"
 
     def quote(self, identifier):
         return "`{}`".format(identifier)
@@ -277,3 +282,9 @@ class TiDBAdapter(SQLAdapter):
         )
 
         return sql
+
+    def valid_incremental_strategies(self):
+        """The set of standard builtin strategies which this adapter supports out-of-the-box.
+        Not used to validate custom strategies defined by end users.
+        """
+        return ["delete+insert"]
