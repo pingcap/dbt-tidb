@@ -1,5 +1,9 @@
 # dbt-tidb changelog
 
+## [1.1.2]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/36)
+
 ## [1.1.1]2022-11-9
 ## Fixes
 - Fix version inconsistencies (https://github.com/pingcap/dbt-tidb/pull/25)
