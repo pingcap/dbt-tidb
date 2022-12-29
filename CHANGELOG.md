@@ -1,5 +1,9 @@
 # dbt-tidb changelog
 
+## [1.0.2]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/38)
+
 ## [1.0.1]2022-8-22
 ## Fixes
 - Add quote to column in create_table_as marco (https://github.com/pingcap/dbt-tidb/pull/9)
