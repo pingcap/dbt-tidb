@@ -87,6 +87,8 @@ class TiDBConnectionManager(SQLConnectionManager):
         if credentials.port:
             kwargs["port"] = credentials.port
 
+        kwargs["conn_attrs"] = {"program_name": "dbt-tidb"}
+
         try:
             connection.handle = mysql.connector.connect(**kwargs)
             connection.state = "open"
