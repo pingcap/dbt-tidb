@@ -1,5 +1,21 @@
 # dbt-tidb changelog
 
+## [1.3.1]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/33)
+
+## [1.2.2]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/37)
+
+## [1.1.2]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/36)
+
+## [1.0.2]2022-12-29
+## Enhancement
+- Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/38)
+
 ## [1.3.0]2022-12-5
 ## Features
 - Support dbt-core v1.3.0 (https://github.com/pingcap/dbt-tidb/pull/29)
