@@ -6,6 +6,7 @@ from dbt.tests.adapter.grants.test_invalid_grants import BaseInvalidGrants
 from dbt.tests.adapter.grants.test_seed_grants import BaseSeedGrants
 from dbt.tests.adapter.grants.test_snapshot_grants import BaseSnapshotGrants
 
+
 # need to export DBT_TEST_USER_1,DBT_TEST_USER_2,DBT_TEST_USER_3
 class TestModelGrantsTiDB(BaseModelGrants):
     pass

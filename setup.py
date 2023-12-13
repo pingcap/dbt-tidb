@@ -2,9 +2,9 @@
 import os
 import sys
 
-if sys.version_info < (3, 8) or sys.version_info >= (3, 11):
+if sys.version_info < (3, 8):
     print("Error: dbt-tidb does not support this version of Python.")
-    print("Please install Python 3.8 or higher but less than 3.11.")
+    print("Please install Python 3.8 or higher.")
     sys.exit(1)
 
 # require version of setuptools that supports find_namespace_packages
@@ -27,8 +27,8 @@ with open(os.path.join(this_directory, "README.md")) as f:
     long_description = f.read()
 
 package_name = "dbt-tidb"
-package_version = "1.3.0"
-dbt_core_version = "1.3.1"
+package_version = "1.6.4"
+dbt_core_version = "1.6.4"
 description = """The TiDB adapter plugin for dbt"""
 
 setup(
@@ -44,7 +44,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "dbt-core~={}".format(dbt_core_version),
-        "mysql-connector-python>=8.0.0,<8.1",
+        "mysql-connector-python>=8.0.0,<8.2",
     ],
     zip_safe=False,
     classifiers=[
@@ -56,6 +56,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
-    python_requires=">=3.8,<=3.10",
+    python_requires=">=3.8",
 )
