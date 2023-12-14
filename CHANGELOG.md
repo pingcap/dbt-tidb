@@ -1,5 +1,9 @@
 # dbt-tidb changelog
 
+## [1.6.4]2023-12-14
+## Features
+- Support dbt-core v1.6.4 (https://github.com/pingcap/dbt-tidb/pull/52)
+
 ## [1.3.1]2022-12-29
 ## Enhancement
 - Add connection attributes (https://github.com/pingcap/dbt-tidb/pull/33)
