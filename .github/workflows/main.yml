@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.9', '3.10' ]
 
     services:
       tidb_nightly:
@@ -34,6 +34,9 @@ jobs:
           pip install -r requirements_dev.txt
 
       - name: Run tests
+        id: nightly-tests
+        # Keep nightly coverage without blocking releases on upstream regressions.
+        continue-on-error: true
         run: |
           mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql
           export DBT_TEST_USER_1=user1
@@ -41,13 +44,17 @@ jobs:
           export DBT_TEST_USER_3=user3
           PYTHONPATH=. pytest tests/functional/adapter/tidb  
 
+      - name: Report nightly test failures
+        if: steps.nightly-tests.outcome == 'failure'
+        run: echo "::warning::TiDB nightly tests failed. See the Run tests logs; stable TiDB checks remain blocking."
+
   tidb_6_1:
     name: Python ${{ matrix.python-version }} | TiDB 6.1
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.9', '3.10' ]
 
     services:
       tidb_nightly:
@@ -83,7 +90,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.9', '3.10' ]
 
     services:
       tidb_nightly:
@@ -118,7 +125,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.9', '3.10' ]
 
     services:
       tidb_5.1:
@@ -153,7 +160,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.9', '3.10' ]
 
     services:
       tidb_4.0:

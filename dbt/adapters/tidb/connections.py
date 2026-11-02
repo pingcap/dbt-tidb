@@ -84,6 +84,8 @@ class TiDBConnectionManager(SQLConnectionManager):
         kwargs["user"] = credentials.username
         kwargs["passwd"] = credentials.password
         kwargs["buffered"] = True
+        # Avoid MySQL 8's default collation, which older TiDB versions do not support.
+        kwargs["collation"] = "utf8mb4_bin"
 
         if credentials.port:
             kwargs["port"] = credentials.port

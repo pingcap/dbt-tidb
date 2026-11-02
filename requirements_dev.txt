@@ -1,5 +1,5 @@
 dbt-core~=1.6.4
-mysql-connector-python>=8.0.0,<8.2
+mysql-connector-python>=9.1.0,<9.2
 pytest~=7.0
 markupsafe==2.0.1
 dbt-tests-adapter~=1.6.4
