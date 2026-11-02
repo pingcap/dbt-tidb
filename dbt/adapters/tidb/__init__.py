@@ -7,7 +7,6 @@ from dbt.adapters.tidb.impl import TiDBAdapter
 from dbt.adapters.base import AdapterPlugin
 from dbt.include import tidb
 
-
 Plugin = AdapterPlugin(
     adapter=TiDBAdapter, credentials=TiDBCredentials, include_path=tidb.PACKAGE_PATH
 )
