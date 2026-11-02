@@ -9,6 +9,8 @@ jobs:
   tidb_nightly:
     name: Python ${{ matrix.python-version }} | TiDB nightly
     runs-on: ubuntu-latest
+    # Keep nightly coverage without blocking releases on upstream regressions.
+    continue-on-error: true
 
     strategy:
       matrix:
