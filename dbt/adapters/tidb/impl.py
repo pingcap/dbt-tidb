@@ -1,5 +1,6 @@
 from concurrent.futures import Future
 from dataclasses import asdict
+import re
 from typing import Optional, List, Dict, Any, Iterable
 import agate
 
@@ -11,6 +12,7 @@ from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.tidb import TiDBConnectionManager
 from dbt.adapters.tidb import TiDBRelation
 from dbt.adapters.tidb import TiDBColumn
+from dbt.adapters.tidb.relation import quote_identifier
 from dbt.adapters.base import BaseRelation, available
 from dbt.clients.agate_helper import DEFAULT_TYPE_TESTER
 from dbt.events import AdapterLogger
@@ -41,7 +43,57 @@ class TiDBAdapter(SQLAdapter):
         return "float" if decimals else "integer"
 
     def quote(self, identifier):
-        return "`{}`".format(identifier)
+        return quote_identifier(identifier)
+
+    @available
+    def sql_string_literal(self, value):
+        return "CONVERT(X'{}' USING utf8mb4)".format(value.encode("utf-8").hex())
+
+    @available
+    def relation_type_sql(self, value):
+        if value not in ("table", "view"):
+            raise dbt.exceptions.DbtRuntimeError(
+                "Unsupported relation type: {!r}".format(value)
+            )
+        return value
+
+    @available
+    def revoke_privilege_sql(self, value):
+        if value not in ("select", "insert", "update", "delete"):
+            raise dbt.exceptions.DbtRuntimeError(
+                "Unsupported privilege from grant metadata: {!r}".format(value)
+            )
+        return value
+
+    @available
+    def column_type_sql(self, value):
+        # SHOW COLUMNS returns SQL type syntax, not an identifier. Only accept a
+        # type declaration, never arbitrary SQL following the type.
+        numeric = r"(?:\(\s*\d+\s*(?:,\s*\d+\s*)?\))?"
+        names = (
+            r"(?:tinyint|smallint|mediumint|int|integer|bigint|decimal|numeric|"
+            r"float|double|real|bit|bool|boolean|char|varchar|binary|varbinary|"
+            r"tinytext|text|mediumtext|longtext|tinyblob|blob|mediumblob|longblob|"
+            r"date|datetime|timestamp|time|year|json|vector)"
+        )
+        # Backslashes are rejected because their meaning changes with SQL mode.
+        member = r"'(?:[^'\\]|'')*'"
+        enum = r"(?:enum|set)\(\s*" + member + r"(?:\s*,\s*" + member + r")*\s*\)"
+        pattern = (
+            r"(?:"
+            + names
+            + numeric
+            + r"(?:\s+unsigned)?(?:\s+zerofill)?|"
+            + enum
+            + r")"
+        )
+        if not isinstance(value, str) or not re.fullmatch(
+            pattern, value, re.IGNORECASE
+        ):
+            raise dbt.exceptions.DbtRuntimeError(
+                "Unsupported column type: {!r}".format(value)
+            )
+        return value
 
     def list_relations_without_caching(
         self, schema_relation: TiDBRelation

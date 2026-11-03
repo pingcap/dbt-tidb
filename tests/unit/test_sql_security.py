@@ -1,0 +1,138 @@
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+from jinja2 import Environment
+
+from dbt.adapters.tidb.column import TiDBColumn
+from dbt.adapters.tidb.impl import TiDBAdapter
+from dbt.adapters.tidb.relation import TiDBRelation
+from dbt.exceptions import DbtRuntimeError
+
+MACROS = Path(__file__).parents[2] / "dbt/include/tidb/macros"
+adapter = object.__new__(TiDBAdapter)
+
+
+def render_macro(filename, name, *args, rows=()):
+    statements = []
+
+    def statement(name, caller, **kwargs):
+        statements.append((name, caller()))
+        return ""
+
+    env = Environment(extensions=["jinja2.ext.do"])
+    module = env.from_string((MACROS / filename).read_text()).make_module(
+        {
+            "adapter": adapter,
+            "statement": statement,
+            "load_result": lambda _: SimpleNamespace(table=rows),
+            "return": lambda value: "",
+            "sql_convert_columns_in_relation": lambda value: [],
+            "config": {"get": lambda *args: None},
+        }
+    )
+    return getattr(module, name)(*args), statements
+
+
+def test_identifier_quoting_all_entry_points():
+    name = "a`b"
+    relation = TiDBRelation.create(schema=name, identifier=name)
+    assert adapter.quote(name) == "`a``b`"
+    assert adapter.quote(None) == "`None`"
+    assert TiDBColumn(name, "int").quoted == "`a``b`"
+    assert relation.render() == "`a``b`.`a``b`"
+
+
+def test_metadata_queries_quote_identifiers_and_literals():
+    relation = TiDBRelation.create(
+        schema="s'\\`",
+        identifier="t`name",
+        type="table",
+        quote_policy={"schema": False, "identifier": False},
+    )
+    _, statements = render_macro(
+        "adapters.sql", "tidb__get_columns_in_relation", relation
+    )
+    assert "show columns from `s'\\```.`t``name`" in statements[0][1]
+    sql, _ = render_macro("apply_grants.sql", "default__get_show_grant_sql", relation)
+    assert adapter.sql_string_literal(relation.schema) in sql
+    assert adapter.sql_string_literal(relation.identifier) in sql
+    assert "s'\\`" not in sql
+    _, statements = render_macro(
+        "adapters.sql", "tidb__list_relations_without_caching", relation
+    )
+    assert adapter.sql_string_literal(relation.schema) in statements[0][1]
+
+
+def test_create_table_validates_type_and_quotes_column():
+    relation = TiDBRelation.create(schema="db`x", identifier="target", type="table")
+    _, statements = render_macro(
+        "adapters.sql",
+        "tidb__create_table_as",
+        False,
+        relation,
+        "select 1",
+        rows=[("a`b", "varchar(20)", "YES")],
+    )
+    assert "`a``b`" in dict(statements)["xxx"]
+    assert "`db``x`.`temp_view`" in dict(statements)["get_columns_in_relation"]
+    with pytest.raises(DbtRuntimeError):
+        render_macro(
+            "adapters.sql",
+            "tidb__create_table_as",
+            False,
+            relation,
+            "select 1",
+            rows=[("col", "int); DROP TABLE users; --", "YES")],
+        )
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "int(11)",
+        "bigint unsigned",
+        "decimal(10,2)",
+        "varchar(255)",
+        "timestamp(6)",
+        "enum('a','b')",
+        "set('a''b','c')",
+        "json",
+    ],
+)
+def test_valid_column_types(value):
+    assert adapter.column_type_sql(value) == value
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "int; DROP TABLE x",
+        "int /*x*/",
+        "enum('a\\', 'b'); DROP TABLE x; --')",
+        "varchar(10) default 1",
+    ],
+)
+def test_rejects_untrusted_type_sql(value):
+    with pytest.raises(DbtRuntimeError):
+        adapter.column_type_sql(value)
+
+
+def test_drop_type_and_grantee_are_safe():
+    relation = TiDBRelation.create(schema="db", identifier="x`y", type="table")
+    for macro in ("tidb__get_grant_sql", "tidb__get_revoke_sql"):
+        sql, _ = render_macro(
+            "apply_grants.sql", macro, relation, "select", ["bad`user"]
+        )
+        assert "`db`.`x``y`" in sql
+        assert "`bad``user`" in sql
+    with pytest.raises(DbtRuntimeError):
+        adapter.relation_type_sql("table; DROP TABLE x")
+    with pytest.raises(DbtRuntimeError):
+        render_macro(
+            "apply_grants.sql",
+            "tidb__get_revoke_sql",
+            relation,
+            "select; DROP TABLE x",
+            ["user"],
+        )

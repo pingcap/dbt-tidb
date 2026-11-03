@@ -4,6 +4,10 @@ from dbt.adapters.base.relation import BaseRelation, Policy
 from dbt.exceptions import DbtRuntimeError
 
 
+def quote_identifier(identifier):
+    return "`{}`".format(str(identifier).replace("`", "``"))
+
+
 @dataclass
 class TiDBQuotePolicy(Policy):
     database: bool = False
@@ -25,6 +29,9 @@ class TiDBRelation(BaseRelation):
         default_factory=lambda: TiDBIncludePolicy()
     )
     quote_character: str = "`"
+
+    def quoted(self, identifier):
+        return quote_identifier(identifier)
 
     def __post_init__(self):
         if self.database != self.schema and self.database:
