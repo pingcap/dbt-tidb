@@ -134,6 +134,12 @@ returned by TiDB. Unsupported type declarations, including `ENUM` or `SET`
 members containing backslashes, fail with an error rather than being inserted
 into SQL. This validation does not change existing tables.
 
+Table materializations use uniquely named staging views for column metadata.
+Failed runs can leave `__dbt_stage_` views behind; remove abandoned views only
+after confirming their builds are no longer running. Use separate schemas and
+database privileges to isolate tenants: a staging view is visible to other
+principals with access to its schema.
+
 ## Database User Privileges
 
 Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE`, and so on.

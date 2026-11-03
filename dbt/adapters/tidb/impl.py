@@ -1,6 +1,7 @@
 from concurrent.futures import Future
 from dataclasses import asdict
 import re
+from uuid import uuid4
 from typing import Optional, List, Dict, Any, Iterable
 import agate
 
@@ -44,6 +45,10 @@ class TiDBAdapter(SQLAdapter):
 
     def quote(self, identifier):
         return quote_identifier(identifier)
+
+    @available
+    def staging_view_name(self):
+        return "__dbt_stage_" + uuid4().hex
 
     @available
     def sql_string_literal(self, value):

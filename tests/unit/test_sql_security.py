@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 from types import SimpleNamespace
 
 import pytest
@@ -75,7 +76,7 @@ def test_create_table_validates_type_and_quotes_column():
         rows=[("a`b", "varchar(20)", "YES")],
     )
     assert "`a``b`" in dict(statements)["xxx"]
-    assert "`db``x`.`temp_view`" in dict(statements)["get_columns_in_relation"]
+    assert "`db``x`.`__dbt_stage_" in dict(statements)["get_columns_in_relation"]
     with pytest.raises(DbtRuntimeError):
         render_macro(
             "adapters.sql",
@@ -85,6 +86,28 @@ def test_create_table_validates_type_and_quotes_column():
             "select 1",
             rows=[("col", "int); DROP TABLE users; --", "YES")],
         )
+
+
+def test_staging_view_is_unique_per_materialization_and_used_consistently():
+    relation = TiDBRelation.create(schema="db", identifier="target", type="table")
+    names = set()
+    for _ in range(20):
+        _, statements = render_macro(
+            "adapters.sql",
+            "tidb__create_table_as",
+            False,
+            relation,
+            "select 1",
+            rows=[("col", "int", "YES")],
+        )
+        sql = dict(statements)
+        name = re.search(r"__dbt_stage_[0-9a-f]{32}", sql["create_view_as"]).group()
+        for step in ("get_columns_in_relation", "drop_view"):
+            assert f"`db`.`{name}`" in sql[step]
+        assert "select 1" in sql["copy_data_from_view_to_table"]
+        assert name not in sql["copy_data_from_view_to_table"]
+        names.add(name)
+    assert len(names) == 20
 
 
 @pytest.mark.parametrize(

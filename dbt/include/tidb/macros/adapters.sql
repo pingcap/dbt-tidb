@@ -34,7 +34,7 @@
 
 {% macro tidb__create_table_as(temporary, relation, sql) -%}
     {# 1. create view #}
-    {% set temp_view = "temp_view" %}
+    {% set temp_view = adapter.staging_view_name() %}
     {% call statement('create_view_as') %}
         {%- set sql_header = config.get('sql_header', none) -%}
         {{ sql_header if sql_header is not none }}
@@ -68,7 +68,7 @@
 
     {# 3. copy data from view to table #}
     {% call statement ('copy_data_from_view_to_table') %}
-        insert into {{ relation.include(database=False).quote(schema=True, identifier=True) }} select * from {{ adapter.quote(relation.schema) }}.{{ adapter.quote(temp_view) }}
+        insert into {{ relation.include(database=False).quote(schema=True, identifier=True) }} {{ sql }}
     {% endcall %}
 
     {# 4. drop view #}
