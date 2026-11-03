@@ -2,16 +2,22 @@ name: Publish to PyPI.org
 on:
   release:
     types: [published]
+
+permissions:
+  contents: read
+
 jobs:
   pypi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
         with:
           fetch-depth: 0
+          persist-credentials: false
       - run: python3 -m pip install --upgrade build && python3 -m build
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
+          attestations: false
