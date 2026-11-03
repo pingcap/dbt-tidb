@@ -35,4 +35,4 @@ class TestInvalidGrantsTiDB(BaseInvalidGrants):
         return "You are not allowed to create a user with GRANT"
 
     def privilege_does_not_exist_error(self):
-        return "You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use"
+        return "Unsupported grant privilege"

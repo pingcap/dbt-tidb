@@ -63,12 +63,18 @@ class TiDBAdapter(SQLAdapter):
         return value
 
     @available
-    def revoke_privilege_sql(self, value):
-        if value not in ("select", "insert", "update", "delete"):
+    def privilege_sql(self, value):
+        if not isinstance(value, str) or value.lower() not in (
+            "select",
+            "insert",
+            "update",
+            "delete",
+        ):
             raise dbt.exceptions.DbtRuntimeError(
-                "Unsupported privilege from grant metadata: {!r}".format(value)
+                "Unsupported grant privilege: {!r}. "
+                "Supported privileges: select, insert, update, delete".format(value)
             )
-        return value
+        return value.lower()
 
     @available
     def column_type_sql(self, value):
