@@ -75,6 +75,9 @@ jobs:
         run: |
           pip install -r requirements_dev.txt
 
+      - name: Run unit tests
+        run: PYTHONPATH=. pytest tests/unit
+
       - name: Run tests
         run: |
           mysql -P4000 -uroot -h127.0.0.1 < tests/functional/adapter/tidb/grant/create_user.sql

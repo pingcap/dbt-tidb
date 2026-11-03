@@ -24,6 +24,11 @@ class TiDBCredentials(Credentials):
     password: Optional[str] = None
     charset: Optional[str] = None
     retries: int = 1
+    ssl_ca: Optional[str] = None
+    ssl_cert: Optional[str] = None
+    ssl_key: Optional[str] = None
+    ssl_verify_cert: Optional[bool] = None
+    ssl_verify_identity: Optional[bool] = None
 
     _ALIASES = {
         "UID": "username",
@@ -84,11 +89,23 @@ class TiDBConnectionManager(SQLConnectionManager):
         kwargs["user"] = credentials.username
         kwargs["passwd"] = credentials.password
         kwargs["buffered"] = True
+        kwargs["allow_local_infile"] = False
         # Avoid MySQL 8's default collation, which older TiDB versions do not support.
         kwargs["collation"] = "utf8mb4_bin"
 
         if credentials.port:
             kwargs["port"] = credentials.port
+
+        for option in (
+            "ssl_ca",
+            "ssl_cert",
+            "ssl_key",
+            "ssl_verify_cert",
+            "ssl_verify_identity",
+        ):
+            value = getattr(credentials, option)
+            if value is not None:
+                kwargs[option] = value
 
         kwargs["conn_attrs"] = {"program_name": "dbt-tidb"}
 
