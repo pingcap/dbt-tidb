@@ -100,12 +100,13 @@ your_profile_name:
   outputs:
     dev:
       type: tidb
-      server: 127.0.0.1
+      server: tidb.example.com
       port: 4000
       schema: database_name
       username: tidb_username
       password: tidb_password
       retries: 2
+      # ssl_ca: /path/to/ca.pem  # if a custom CA is needed
 ```
 
 | Option           | Description                                           | Required? | Example                        |
@@ -120,13 +121,16 @@ your_profile_name:
 | ssl_ca | Path to the trusted CA certificate in PEM format | Optional | `/path/to/ca.pem` |
 | ssl_cert | Path to the client certificate in PEM format | Optional | `/path/to/client-cert.pem` |
 | ssl_key | Path to the client private key in PEM format | Optional | `/path/to/client-key.pem` |
-| ssl_verify_cert | Verify the server certificate against the CA | Optional | `true` |
-| ssl_verify_identity | Verify the server hostname against its certificate | Optional | `true` |
+| ssl_verify_cert | Verify the server certificate (default: true) | Optional | `true` |
+| ssl_verify_identity | Verify the server hostname (default: true) | Optional | `true` |
 
-For remote connections, configure `ssl_ca`, `ssl_verify_cert: true`, and
-`ssl_verify_identity: true` to require TLS and authenticate the server. The
-`server` hostname must match the certificate. Without verification options,
-the connector may use an unverified TLS connection or fall back to plaintext.
+Connections require TLS with certificate and hostname verification by default.
+The `server` hostname must match the certificate. Set `ssl_ca` if the server's
+CA is not trusted by the system. Existing profiles using plaintext, self-signed
+certificates, or a mismatched hostname will now fail until configured correctly.
+For a trusted local development server without TLS, explicitly set both
+`ssl_verify_cert: false` and `ssl_verify_identity: false`. This weakens server
+authentication and allows fallback to plaintext.
 Client-side `LOAD DATA LOCAL INFILE` is disabled for all connections.
 
 When creating tables from query results, the adapter validates column types
