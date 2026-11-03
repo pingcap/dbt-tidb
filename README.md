@@ -117,6 +117,17 @@ your_profile_name:
 | username         | The username to use to connect to the server          | Required  | `dbt_admin`                    |
 | password         | The password to use for authenticating to the server  | Required  | `correct-horse-battery-staple` |
 | retries          | The retry times for connection to TiDB (1 in default) | Optional  | `2`                            |
+| ssl_ca | Path to the trusted CA certificate in PEM format | Optional | `/path/to/ca.pem` |
+| ssl_cert | Path to the client certificate in PEM format | Optional | `/path/to/client-cert.pem` |
+| ssl_key | Path to the client private key in PEM format | Optional | `/path/to/client-key.pem` |
+| ssl_verify_cert | Verify the server certificate against the CA | Optional | `true` |
+| ssl_verify_identity | Verify the server hostname against its certificate | Optional | `true` |
+
+For remote connections, configure `ssl_ca`, `ssl_verify_cert: true`, and
+`ssl_verify_identity: true` to require TLS and authenticate the server. The
+`server` hostname must match the certificate. Without verification options,
+the connector may use an unverified TLS connection or fall back to plaintext.
+Client-side `LOAD DATA LOCAL INFILE` is disabled for all connections.
 
 ## Database User Privileges
 
