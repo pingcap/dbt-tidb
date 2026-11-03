@@ -27,8 +27,8 @@ class TiDBCredentials(Credentials):
     ssl_ca: Optional[str] = None
     ssl_cert: Optional[str] = None
     ssl_key: Optional[str] = None
-    ssl_verify_cert: Optional[bool] = None
-    ssl_verify_identity: Optional[bool] = None
+    ssl_verify_cert: bool = True
+    ssl_verify_identity: bool = True
 
     _ALIASES = {
         "UID": "username",

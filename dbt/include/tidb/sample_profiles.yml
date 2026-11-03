@@ -9,10 +9,11 @@ default:
       schema: [schema]
       username: [username]
       password: [password]
-      # For remote connections, enable server certificate and hostname verification:
+      # TLS and server certificate/hostname verification are enabled by default.
       # ssl_ca: /path/to/ca.pem
-      # ssl_verify_cert: true
-      # ssl_verify_identity: true
+      # Only for a trusted local development server without TLS:
+      # ssl_verify_cert: false
+      # ssl_verify_identity: false
       driver: MySQL ODBC 8.0 ANSI Driver
     prod:
       type: tidb
@@ -22,4 +23,6 @@ default:
       schema: [schema]
       username: [username]
       password: [password]
+      # Use a CA file if the server certificate is not trusted by the system.
+      # ssl_ca: /path/to/ca.pem
       driver: MySQL ODBC 8.0 ANSI Driver
