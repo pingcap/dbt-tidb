@@ -159,3 +159,91 @@ def test_drop_type_and_grantee_are_safe():
             "select; DROP TABLE x",
             ["user"],
         )
+
+
+@pytest.mark.parametrize("action,preposition", [("grant", "to"), ("revoke", "from")])
+@pytest.mark.parametrize("privilege", ["SELECT", "Insert", "uPdAtE", "delete"])
+def test_grants_accept_only_supported_privileges(action, preposition, privilege):
+    relation = TiDBRelation.create(
+        schema="db`name",
+        identifier="table`name",
+        quote_policy={"schema": False, "identifier": False},
+    )
+    sql, _ = render_macro(
+        "apply_grants.sql",
+        f"tidb__get_{action}_sql",
+        relation,
+        privilege,
+        ["user1", "user2"],
+    )
+    assert sql == (
+        f"{action} {privilege.lower()} on `db``name`.`table``name` "
+        f"{preposition} `user1`, `user2`"
+    )
+    _, statements = render_macro("apply_grants.sql", "tidb__call_dcl_statements", [sql])
+    assert len(statements) == 1
+    assert statements[0][1].strip() == sql
+
+
+@pytest.mark.parametrize("action", ["grant", "revoke"])
+@pytest.mark.parametrize(
+    "privilege",
+    [
+        "ALL PRIVILEGES",
+        "ALL PRIVILEGES ON *.*",
+        "SUPER",
+        "GRANT OPTION",
+        "SELECT ON *.* TO 'x'@'%' IDENTIFIED BY 'p' WITH GRANT OPTION --",
+        "select; DROP USER root",
+        "select, insert",
+        "select/*comment*/",
+        "select\nON *.*",
+        " select",
+        "select ",
+        "",
+        None,
+        1,
+        ["select"],
+    ],
+)
+def test_grants_reject_untrusted_privileges_before_execution(action, privilege):
+    relation = TiDBRelation.create(schema="db", identifier="target")
+    with pytest.raises(DbtRuntimeError, match="Unsupported grant privilege"):
+        render_macro(
+            "apply_grants.sql",
+            f"tidb__get_{action}_sql",
+            relation,
+            privilege,
+            ["user"],
+        )
+
+
+@pytest.mark.parametrize("action,preposition", [("grant", "to"), ("revoke", "from")])
+@pytest.mark.parametrize(
+    "grantee,quoted",
+    [
+        ('bad"user', '`bad"user`'),
+        ("bad'user", "`bad'user`"),
+        ("bad`user", "`bad``user`"),
+        ("bad\\user", "`bad\\user`"),
+        ('x" WITH GRANT OPTION --', '`x" WITH GRANT OPTION --`'),
+        (
+            "x` WITH GRANT OPTION; DROP USER root; --",
+            "`x`` WITH GRANT OPTION; DROP USER root; --`",
+        ),
+        ("x`@`%", "`x``@``%`"),
+        ("", "''"),
+    ],
+)
+def test_grantee_payloads_remain_one_quoted_account(
+    action, preposition, grantee, quoted
+):
+    relation = TiDBRelation.create(schema="db", identifier="target")
+    sql, _ = render_macro(
+        "apply_grants.sql",
+        f"tidb__get_{action}_sql",
+        relation,
+        "select",
+        [grantee, "reader"],
+    )
+    assert sql == f"{action} select on `db`.`target` {preposition} {quoted}, `reader`"

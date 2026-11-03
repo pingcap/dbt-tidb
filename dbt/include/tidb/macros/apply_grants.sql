@@ -12,11 +12,11 @@
 {% endmacro %}
 
 {%- macro tidb__get_grant_sql(relation, privilege, grantees) -%}
-    grant {{ privilege }} on {{ relation.quote(schema=True, identifier=True) }} to {% for grantee in grantees %}{{ adapter.quote(grantee) if grantee else "''" }}{% if not loop.last %}, {% endif %}{% endfor %}
+    grant {{ adapter.privilege_sql(privilege) }} on {{ relation.quote(schema=True, identifier=True) }} to {% for grantee in grantees %}{{ adapter.quote(grantee) if grantee else "''" }}{% if not loop.last %}, {% endif %}{% endfor %}
 {%- endmacro -%}
 
  {%- macro tidb__get_revoke_sql(relation, privilege, grantees) -%}
-    revoke {{ adapter.revoke_privilege_sql(privilege) }} on {{ relation.quote(schema=True, identifier=True) }} from {% for grantee in grantees %}{{ adapter.quote(grantee) if grantee else "''" }}{% if not loop.last %}, {% endif %}{% endfor %}
+    revoke {{ adapter.privilege_sql(privilege) }} on {{ relation.quote(schema=True, identifier=True) }} from {% for grantee in grantees %}{{ adapter.quote(grantee) if grantee else "''" }}{% if not loop.last %}, {% endif %}{% endfor %}
 {%- endmacro -%}
 
 -- tidb-dbt does not support multi=true now, so we need to split every grant/revoke statement

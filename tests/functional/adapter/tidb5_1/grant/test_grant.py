@@ -40,4 +40,4 @@ class TestInvalidGrantsTiDB(BaseInvalidGrants):
         return "You are not allowed to create a user with GRANT"
 
     def privilege_does_not_exist_error(self):
-        return "Illegal privilege level specified for"
+        return "Unsupported grant privilege"

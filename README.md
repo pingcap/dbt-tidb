@@ -142,6 +142,11 @@ principals with access to its schema.
 
 ## Database User Privileges
 
+The `grants` config supports only `SELECT`, `INSERT`, `UPDATE`, and `DELETE`
+(case insensitive). Other privilege values fail before DCL execution. Grantees
+are quoted as individual user names; SQL fragments and `user@host` account
+expressions are not interpreted.
+
 Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE`, and so on.
 You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-management) with TiDB privileges management.
 
