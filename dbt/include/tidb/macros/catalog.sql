@@ -46,7 +46,7 @@
     where table_schema not in ('INFORMATION_SCHEMA', 'METRICS_SCHEMA', 'PERFORMANCE_SCHEMA', 'mysql')
     and (
     {%- for schema in schemas -%}
-      upper(table_schema) = upper('{{ schema }}'){%- if not loop.last %} or {% endif -%}
+      upper(table_schema) = upper({{ adapter.sql_string_literal(schema) }}){%- if not loop.last %} or {% endif -%}
     {%- endfor -%}
     )
     order by column_index

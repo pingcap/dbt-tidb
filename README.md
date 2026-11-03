@@ -129,6 +129,11 @@ For remote connections, configure `ssl_ca`, `ssl_verify_cert: true`, and
 the connector may use an unverified TLS connection or fall back to plaintext.
 Client-side `LOAD DATA LOCAL INFILE` is disabled for all connections.
 
+When creating tables from query results, the adapter validates column types
+returned by TiDB. Unsupported type declarations, including `ENUM` or `SET`
+members containing backslashes, fail with an error rather than being inserted
+into SQL. This validation does not change existing tables.
+
 ## Database User Privileges
 
 Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE`, and so on.

@@ -10,25 +10,25 @@
 
 {% macro tidb__create_schema(relation) -%}
   {%- call statement('create_schema') -%}
-    create schema if not exists {{ relation.without_identifier() }}
+    create schema if not exists {{ relation.without_identifier().quote(schema=True) }}
   {%- endcall -%}
 {% endmacro %}
 
 {% macro tidb__drop_schema(relation) -%}
   {%- call statement('drop_schema') -%}
-    drop schema if exists {{ relation.without_identifier() }}
+    drop schema if exists {{ relation.without_identifier().quote(schema=True) }}
   {% endcall %}
 {% endmacro %}
 
 {% macro tidb__drop_relation(relation) -%}
     {% call statement('drop_relation', auto_begin=False) -%}
-        drop {{ relation.type }} if exists {{ relation }}
+        drop {{ adapter.relation_type_sql(relation.type) }} if exists {{ relation.quote(schema=True, identifier=True) }}
     {%- endcall %}
 {% endmacro %}
 
 {% macro tidb__truncate_relation(relation) -%}
     {% call statement('truncate_relation') -%}
-      truncate table {{ relation }}
+      truncate table {{ relation.quote(schema=True, identifier=True) }}
     {%- endcall %}
 {% endmacro %}
 
@@ -40,7 +40,7 @@
         {{ sql_header if sql_header is not none }}
 
         create view
-            {{ relation.schema }}.{{ temp_view }}
+            {{ adapter.quote(relation.schema) }}.{{ adapter.quote(temp_view) }}
         as (
             {{ sql }}
         )
@@ -48,18 +48,18 @@
 
     {# 2. create table #}
     {% call statement('get_columns_in_relation', fetch_result=True) %}
-        show columns from {{ relation.schema }}.{{ temp_view }}
+        show columns from {{ adapter.quote(relation.schema) }}.{{ adapter.quote(temp_view) }}
     {% endcall %}
 
     {% set table = load_result('get_columns_in_relation').table %}
 
     {% call statement ('xxx') %}
         create  {% if temporary: -%}temporary{%- endif %} table if not exists
-        {{ relation.include(database=False) }}
+        {{ relation.include(database=False).quote(schema=True, identifier=True) }}
         (
             {% for row in table %}
-                `{{ row[0] }}`
-                {{ row[1] }}
+                {{ adapter.quote(row[0]) }}
+                {{ adapter.column_type_sql(row[1]) }}
                 {% if row[2] == "NO" %} not null {% endif %}
                 {% if not loop.last %},{% endif %}
             {% endfor %}
@@ -68,12 +68,12 @@
 
     {# 3. copy data from view to table #}
     {% call statement ('copy_data_from_view_to_table') %}
-        insert into {{ relation.include(database=False) }} select * from {{ relation.schema }}.{{ temp_view }}
+        insert into {{ relation.include(database=False).quote(schema=True, identifier=True) }} select * from {{ adapter.quote(relation.schema) }}.{{ adapter.quote(temp_view) }}
     {% endcall %}
 
     {# 4. drop view #}
     {% call statement('drop_view') %}
-        drop view if exists {{ relation.schema }}.{{ temp_view }}
+        drop view if exists {{ adapter.quote(relation.schema) }}.{{ adapter.quote(temp_view) }}
     {% endcall %}
 
 {% endmacro %}
@@ -85,10 +85,10 @@
     2. Rename the new relation to existing relation
   #}
   {% call statement('drop_relation') %}
-    drop {{ to_relation.type }} if exists {{ to_relation }} cascade
+    drop {{ adapter.relation_type_sql(to_relation.type) }} if exists {{ to_relation.quote(schema=True, identifier=True) }} cascade
   {% endcall %}
   {% call statement('rename_relation') %}
-    rename table {{ from_relation }} to {{ to_relation }}
+    rename table {{ from_relation.quote(schema=True, identifier=True) }} to {{ to_relation.quote(schema=True, identifier=True) }}
   {% endcall %}
 {% endmacro %}
 
@@ -99,7 +99,7 @@
 
 {% macro tidb__get_columns_in_relation(relation) -%}
     {% call statement('get_columns_in_relation', fetch_result=True) %}
-        show columns from {{ relation.schema }}.{{ relation.identifier }}
+        show columns from {{ relation.quote(schema=True, identifier=True) }}
     {% endcall %}
 
     {% set table = load_result('get_columns_in_relation').table %}
@@ -117,7 +117,7 @@
            else table_type
       end as table_type
     from information_schema.tables
-    where table_schema = '{{ schema_relation.schema }}'
+    where table_schema = {{ adapter.sql_string_literal(schema_relation.schema) }}
   {% endcall %}
   {{ return(load_result('list_relations_without_caching').table) }}
 {% endmacro %}
