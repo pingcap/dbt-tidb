@@ -29,8 +29,6 @@ def test_connection_passes_tls_profile_options():
         "ssl_verify_cert": True,
         "ssl_verify_identity": True,
     }
-    kwargs = connect_with_profile(
-        {"server": "db.example.com", "schema": "test", **tls}
-    )
+    kwargs = connect_with_profile({"server": "db.example.com", "schema": "test", **tls})
     assert all(kwargs[key] == value for key, value in tls.items())
     assert kwargs["allow_local_infile"] is False
