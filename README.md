@@ -151,20 +151,27 @@ The `grants` config supports only `SELECT`, `INSERT`, `UPDATE`, and `DELETE`
 are quoted as individual user names; SQL fragments and `user@host` account
 expressions are not interpreted.
 
-Your database user would be able to have some abilities to read or write, such as `SELECT`, `CREATE`, and so on.
-You can find some help [here](https://docs.pingcap.com/tidb/v4.0/privilege-management) with TiDB privileges management.
+Use a dedicated dbt account with privileges limited to its source tables and
+target schemas. `SUPER` is not required. Grant only the privileges needed by the
+materializations and commands you use:
 
-| Required Privilege     |
-|------------------------|
-| SELECT                 |
-| CREATE                 |
-| CREATE TEMPORARY TABLE |
-| CREATE VIEW            |
-| INSERT                 |
-| DROP                   |
-| SHOW DATABASE          |
-| SHOW VIEW              |
-| SUPER                  |
+| Operation | Privileges | Scope |
+|-----------|------------|-------|
+| Read source data | `SELECT` | Source tables or views |
+| Build tables and staging views, insert data, and replace or rename relations | `SELECT`, `CREATE`, `CREATE VIEW`, `INSERT`, `DROP`, `ALTER` | dbt target schemas |
+| Incremental delete+insert | `DELETE` | Incremental target tables |
+| Update snapshots or expand column types | `UPDATE`, `ALTER` (plus `CREATE` and `INSERT` for applicable ALTER operations) | Affected target tables |
+| Create temporary tables | `CREATE TEMPORARY TABLES` | Schemas where temporary tables are created |
+| Inspect view definitions | `SHOW VIEW` | Relevant views |
+| Manage model `grants` | The privileges being granted or revoked, with `GRANT OPTION`; `SELECT` on `mysql.tables_priv` for grant discovery | Managed target relations; `mysql.tables_priv` for metadata reads |
+
+Pre-create grantee accounts through a separate administrator. Grant management
+does not require giving the dbt account `CREATE USER` or write access to `mysql.*`.
+Avoid global grants on `*.*`. Project SQL and hooks may require additional
+privileges; review those separately. See [TiDB privilege management](https://docs.pingcap.com/tidb/stable/privilege-management/)
+for operation-specific requirements. Changing this documentation does not revoke
+privileges already assigned to existing accounts; review and remove unnecessary
+grants separately.
 
 ## Running Tests
 
