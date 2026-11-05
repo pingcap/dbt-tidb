@@ -17,7 +17,7 @@ def dbt_profile_target():
         "host": os.getenv("TIDB_TEST_HOST", "127.0.0.1"),
         "user": os.getenv("TIDB_TEST_USER", "root"),
         "password": os.getenv("TIDB_TEST_PASSWORD", ""),
-        "port": os.getenv("TIDB_TEST_PORT", 4000),
+        "port": int(os.getenv("TIDB_TEST_PORT", 4000)),
         # The local/CI TiDB test servers do not provide TLS.
         "ssl_verify_cert": False,
         "ssl_verify_identity": False,

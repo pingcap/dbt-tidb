@@ -148,8 +148,13 @@ principals with access to its schema.
 
 The `grants` config supports only `SELECT`, `INSERT`, `UPDATE`, and `DELETE`
 (case insensitive). Other privilege values fail before DCL execution. Grantees
-are quoted as individual user names; SQL fragments and `user@host` account
-expressions are not interpreted.
+must be non-empty user names and target accounts at host `%`. Each name is
+quoted as one user name; SQL fragments and `user@host` account expressions are
+not interpreted. Empty, whitespace-only, and non-string grantees fail before
+DCL execution. Grant reconciliation also fails if it discovers anonymous or
+host-scoped accounts holding these table privileges. Review and manage those
+grants separately before retrying; the adapter does not silently ignore or
+revoke them from a different account.
 
 Use a dedicated dbt account with privileges limited to its source tables and
 target schemas. `SUPER` is not required. Grant only the privileges needed by the
