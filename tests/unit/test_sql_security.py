@@ -2,6 +2,7 @@ from pathlib import Path
 import re
 from types import SimpleNamespace
 
+import agate
 import pytest
 from jinja2 import Environment
 
@@ -59,6 +60,7 @@ def test_metadata_queries_quote_identifiers_and_literals():
     assert adapter.sql_string_literal(relation.schema) in sql
     assert adapter.sql_string_literal(relation.identifier) in sql
     assert "s'\\`" not in sql
+    assert sql.count("`Host` as host") == 4
     _, statements = render_macro(
         "adapters.sql", "tidb__list_relations_without_caching", relation
     )
@@ -178,7 +180,7 @@ def test_grants_accept_only_supported_privileges(action, preposition, privilege)
     )
     assert sql == (
         f"{action} {privilege.lower()} on `db``name`.`table``name` "
-        f"{preposition} `user1`, `user2`"
+        f"{preposition} `user1`@'%', `user2`@'%'"
     )
     _, statements = render_macro("apply_grants.sql", "tidb__call_dcl_statements", [sql])
     assert len(statements) == 1
@@ -232,7 +234,6 @@ def test_grants_reject_untrusted_privileges_before_execution(action, privilege):
             "`x`` WITH GRANT OPTION; DROP USER root; --`",
         ),
         ("x`@`%", "`x``@``%`"),
-        ("", "''"),
     ],
 )
 def test_grantee_payloads_remain_one_quoted_account(
@@ -246,4 +247,63 @@ def test_grantee_payloads_remain_one_quoted_account(
         "select",
         [grantee, "reader"],
     )
-    assert sql == f"{action} select on `db`.`target` {preposition} {quoted}, `reader`"
+    assert sql == (
+        f"{action} select on `db`.`target` {preposition} " f"{quoted}@'%', `reader`@'%'"
+    )
+
+
+@pytest.mark.parametrize("action", ["grant", "revoke"])
+@pytest.mark.parametrize("grantee", ["", " ", "\t\n", None, False, 0, 1, [], {}])
+def test_grants_reject_invalid_grantees(action, grantee):
+    relation = TiDBRelation.create(schema="db", identifier="target")
+    with pytest.raises(DbtRuntimeError, match="Invalid grant grantee"):
+        render_macro(
+            "apply_grants.sql",
+            f"tidb__get_{action}_sql",
+            relation,
+            "select",
+            ["reader", grantee],
+        )
+
+
+def grants_table(rows):
+    return agate.Table(
+        rows,
+        ["privilege_type", "grantee", "host"],
+        [agate.Text(), agate.Text(), agate.Text()],
+    )
+
+
+def test_grant_discovery_preserves_supported_accounts():
+    assert adapter.standardize_grants_dict(grants_table([])) == {}
+    assert adapter.standardize_grants_dict(
+        grants_table(
+            [
+                ("select", "reader", "%"),
+                ("select", "other`reader", "%"),
+                ("insert", "writer", "%"),
+                ("update", "writer", "%"),
+                ("delete", "writer", "%"),
+            ]
+        )
+    ) == {
+        "select": ["reader", "other`reader"],
+        "insert": ["writer"],
+        "update": ["writer"],
+        "delete": ["writer"],
+    }
+
+
+@pytest.mark.parametrize("host", ["10.0.0.1", "localhost", "10.%", "", None])
+def test_grant_discovery_rejects_host_scoped_accounts(host):
+    # A same-name wildcard account must not hide the host-scoped account.
+    with pytest.raises(DbtRuntimeError, match="Cannot reconcile grants for account"):
+        adapter.standardize_grants_dict(
+            grants_table([("select", "reader", "%"), ("select", "reader", host)])
+        )
+
+
+@pytest.mark.parametrize("grantee", ["", " ", None])
+def test_grant_discovery_rejects_anonymous_accounts(grantee):
+    with pytest.raises(DbtRuntimeError, match="Invalid grant grantee"):
+        adapter.standardize_grants_dict(grants_table([("select", grantee, "%")]))

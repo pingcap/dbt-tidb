@@ -77,6 +77,30 @@ class TiDBAdapter(SQLAdapter):
         return value.lower()
 
     @available
+    def grantee_sql(self, value):
+        if not isinstance(value, str) or not value.strip():
+            raise dbt.exceptions.DbtRuntimeError(
+                "Invalid grant grantee: {!r}. Expected a non-empty user name".format(
+                    value
+                )
+            )
+        return self.quote(value) + "@'%'"
+
+    @available
+    def standardize_grants_dict(self, grants_table: agate.Table) -> dict:
+        for row in grants_table:
+            if row["host"] != "%":
+                raise dbt.exceptions.DbtRuntimeError(
+                    "Cannot reconcile grants for account {!r}@{!r}. "
+                    "The grants config supports only user accounts at host '%'; "
+                    "manage host-scoped grants separately before retrying".format(
+                        row["grantee"], row["host"]
+                    )
+                )
+            self.grantee_sql(row["grantee"])
+        return super().standardize_grants_dict(grants_table)
+
+    @available
     def column_type_sql(self, value):
         # SHOW COLUMNS returns SQL type syntax, not an identifier. Only accept a
         # type declaration, never arbitrary SQL following the type.
